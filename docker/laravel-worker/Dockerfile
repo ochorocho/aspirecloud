@@ -19,8 +19,6 @@ FROM base AS dev
 
 RUN install-php-extensions xdebug
 
-USER app
-
 ################
 FROM base AS prod
 

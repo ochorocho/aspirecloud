@@ -3,7 +3,7 @@ FROM dunglas/frankenphp:1.4.4-php8.4.4-bookworm@sha256:462c2d0eb8dd4fae16b7396f9
 COPY --from=composer:2.8.5 /usr/bin/composer /usr/bin/composer
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.14/install-php-extensions /usr/local/bin/
 
-RUN apt update && apt install -y bash gpg postgresql-client vim zip
+RUN apt update && apt install -y bash gpg postgresql-client vim zip git
 
 RUN install-php-extensions pdo pdo_pgsql zip intl opcache redis
 
@@ -16,7 +16,7 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
     && npm install -g yarn
 
 
-RUN groupadd --gid 100000 app \
+RUN git config --global --add safe.directory /app && groupadd --gid 100000 app \
     && useradd --uid 100000 --gid 100000 --create-home --shell /bin/bash app \
     && chown -R app:app /config /data
 
@@ -26,8 +26,6 @@ WORKDIR /app
 FROM base AS dev
 
 RUN install-php-extensions xdebug
-
-USER app
 
 ################
 FROM base AS prod
