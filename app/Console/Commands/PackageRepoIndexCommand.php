@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Models\Package;
 use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +21,10 @@ class PackageRepoIndexCommand extends Command
 
     protected $description = 'Import packages from FAIR repositories';
 
-    private string $currentRepo = '';
+    /** @var array{url: string, auth?: array{username: string, password: string}, packages_path?: string} */
+    private array $currentRepo = ['url' => ''];
+
+    private bool $useSlug = false;
 
     private int $errors = 0;
 
@@ -42,10 +47,11 @@ class PackageRepoIndexCommand extends Command
 
         assert(is_iterable($repos));
         foreach ($repos as $repo) {
-            assert(is_string($repo));
+            assert(is_array($repo));
             $this->currentRepo = $repo;
+            $this->useSlug = false;
             try {
-                $packages = $this->getRepoPackages($repo);
+                $packages = $this->getRepoPackages();
                 foreach ($packages as $did) {
                     try {
                         DB::transaction(
@@ -62,7 +68,7 @@ class PackageRepoIndexCommand extends Command
                 }
             } catch (Exception $e) {
                 $this->errors++;
-                $this->error("Repo $this->currentRepo: {$e->getMessage()}");
+                $this->error("Repo {$this->repoUrl()}: {$e->getMessage()}");
                 $this->option('stop-on-first-error') and $this->fail('Errors encountered -- aborting.');
             }
         }
@@ -74,45 +80,92 @@ class PackageRepoIndexCommand extends Command
         $this->info("Indexed $this->loaded packages.");
     }
 
-    /** @return array<string, string> */
-    private function getRepoPackages(string $repoUrl): array
+    private function repoUrl(): string
     {
-        $this->info("Fetching packages from $repoUrl");
+        return rtrim($this->currentRepo['url'], '/');
+    }
 
-        $response = HTTP::withUrlParameters([
-            'repoUrl' => rtrim($repoUrl, '/'),
-            'path' => trim(config('fair.paths.packages', '/wp-json/minifair/v1/packages'), '/'),
-        ])->withHeaders(['Accept' => 'application/json'])
-        ->get('{+repoUrl}/{+path}');
+    private function packagesPath(): string
+    {
+        $path = $this->currentRepo['packages_path']
+            ?? config('fair.paths.packages', '/packages');
+        assert(is_string($path));
+        return trim($path, '/');
+    }
+
+    private function httpClient(): PendingRequest
+    {
+        $client = Http::withHeaders(['Accept' => 'application/json']);
+
+        if (isset($this->currentRepo['auth']['username'], $this->currentRepo['auth']['password'])) {
+            $client = $client->withBasicAuth(
+                $this->currentRepo['auth']['username'],
+                $this->currentRepo['auth']['password'],
+            );
+        }
+
+        return $client;
+    }
+
+    /** @return array<string, string> */
+    private function getRepoPackages(): array
+    {
+        $url = $this->repoUrl() . '/' . $this->packagesPath();
+        $this->info("Fetching packages from $url");
+
+        $response = $this->httpClient()->get($url);
 
         if ($response->failed()) {
-            throw new Exception("Failed to fetch $repoUrl");
+            throw new Exception("Failed to fetch packages from $url (HTTP {$response->status()})");
         }
 
         $data = $response->json();
         if (!is_array($data)) {
-            throw new Exception("Invalid JSON from $repoUrl");
+            throw new Exception("Invalid JSON from $url");
         }
         return $data;
     }
 
+    /**
+     * Extract the slug from a DID string.
+     * e.g. "did:web:extensions.typo3.org:tw_shop" -> "tw_shop"
+     */
+    private function extractSlug(string $did): string
+    {
+        $parts = explode(':', $did);
+        return end($parts);
+    }
+
     private function readPackageMetadata(string $did, Closure $next): void
     {
-        $this->info("Fetching package $did metadata from $this->currentRepo");
+        $baseUrl = $this->repoUrl() . '/' . $this->packagesPath();
 
-        $response = HTTP::withUrlParameters([
-            'repoUrl' => rtrim($this->currentRepo, '/'),
-            'path' => trim(config('fair.paths.packages', '/wp-json/minifair/v1/packages'), '/'),
-            'did' => $did,
-        ])->withHeaders(['Accept' => 'application/json'])
-        ->get('{+repoUrl}/{+path}/{+did}');
+        if ($this->useSlug) {
+            $identifier = $this->extractSlug($did);
+        } else {
+            $identifier = $did;
+        }
+
+        $this->info("Fetching package $did from {$this->repoUrl()}");
+
+        $response = $this->httpClient()->get($baseUrl . '/' . $identifier);
+
+        // Auto-detect: if DID-based fetch returns 404, retry with slug
+        if ($response->status() === 404 && !$this->useSlug && $identifier !== $this->extractSlug($did)) {
+            $slug = $this->extractSlug($did);
+            $this->warn("DID lookup failed, retrying with slug '$slug' (will use slugs for remaining packages)");
+            $response = $this->httpClient()->get($baseUrl . '/' . $slug);
+            if ($response->successful()) {
+                $this->useSlug = true;
+            }
+        }
 
         if ($response->failed()) {
-            throw new Exception("Failed to fetch package metadata from $this->currentRepo");
+            throw new Exception("Failed to fetch package metadata for $did (HTTP {$response->status()})");
         }
         $metadata = $response->json();
         if (!is_array($metadata)) {
-            throw new Exception("Invalid JSON from $this->currentRepo");
+            throw new Exception("Invalid JSON for package $did");
         }
         $next($metadata);
     }
@@ -121,8 +174,9 @@ class PackageRepoIndexCommand extends Command
     private function createPackage(array $metadata, Closure $next): void
     {
         $fairMetadata = FairMetadata::from($metadata);
-        $package = PackageData::from($fairMetadata);
+        $packageData = PackageData::from($fairMetadata);
+        Package::fromPackageData($packageData);
         $this->loaded++;
-        $next($package);
+        $next($packageData);
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 use App\Utils\Config;
 
 return [
-    'repos' => Config::stringList(env('FAIR_REPOS', '[]')),
+    'repos' => Config::repoList(env('FAIR_REPOS', '[]')),
     'paths' => [
-        'packages' => '/wp-json/minifair/v1/packages/',
+        'packages' => '/packages',
     ],
     'domains' => [
         'webdid' => env('FAIR_WEBDID_DOMAIN', null),
