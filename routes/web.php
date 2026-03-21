@@ -1,9 +1,13 @@
 <?php
 declare(strict_types=1);
 
+use App\Http\Controllers\Web\ExtensionController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home');
+Route::get('/', fn () => redirect()->route('extensions.index'));
+
+Route::get('/extensions', [ExtensionController::class, 'index'])->name('extensions.index');
+Route::get('/extensions/{type}/{slug}', [ExtensionController::class, 'show'])->name('extensions.show');
 
 Route::middleware([
     'auth:sanctum',

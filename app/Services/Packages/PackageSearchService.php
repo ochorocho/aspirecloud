@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services\Packages;
 
 use App\Models\Package;
+use App\Models\PackageRelease;
 use App\Values\Packages\PackageSearchRequest;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,7 +32,11 @@ class PackageSearchService
         if ($request->q === null || $request->q === '') {
             $query = Package::with($this->eagerLoads($request))
                 ->where('type', $request->type)
-                ->orderByDesc('created_at');
+                ->orderByDesc(
+                    PackageRelease::query()
+                        ->selectRaw('MAX(package_releases.created_at)')
+                        ->whereColumn('package_releases.package_id', 'packages.id'),
+                );
 
             $this->applyRequiresFilter($query, $request);
 

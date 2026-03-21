@@ -18,6 +18,16 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                typo3: {
+                    orange: '#ff8700',
+                    'orange-hover': '#e67a00',
+                    dark: '#313131',
+                    'dark-lighter': '#4a4a4a',
+                    light: '#f5f5f5',
+                    border: '#e0e0e0',
+                },
+            },
         },
     },
 
