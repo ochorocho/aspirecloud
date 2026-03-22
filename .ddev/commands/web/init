@@ -11,7 +11,7 @@ composer install
 
 echo "==> Installing JavaScript dependencies..."
 rm -rf node_modules
-npm ci
+npm install
 
 echo "==> Building frontend assets..."
 npm run build
