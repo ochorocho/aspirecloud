@@ -1,0 +1,12 @@
+#!/bin/bash
+
+## Description: Drop and recreate the main database, run migrations and seeds
+## Usage: reset-database
+## Example: "ddev reset-database"
+
+set -e
+
+PGPASSWORD=db psql -U db -h db -c 'drop database if exists db'
+PGPASSWORD=db psql -U db -h db -c 'create database db owner db'
+php artisan migrate --force --no-interaction
+php artisan db:seed

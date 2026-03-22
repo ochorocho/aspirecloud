@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Drop and recreate the testing database, run migrations and seeds
+## Usage: reset-testing-database
+## Example: "ddev reset-testing-database"
+
+set -e
+
+meta/bin/reset-testing-database

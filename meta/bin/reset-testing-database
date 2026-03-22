@@ -8,9 +8,13 @@
 export APP_ENV=testing
 export DB_CONNECTION=test
 
-export PGPASSWORD=$DB_ROOT_PASSWORD
-psql -U $DB_ROOT_USERNAME -h $DB_HOST -c 'drop database if exists aspirecloud_testing'
-psql -U $DB_ROOT_USERNAME -h $DB_HOST -c "create database aspirecloud_testing owner $DB_USERNAME"
-psql -U $DB_ROOT_USERNAME -h $DB_HOST -c "create extension if not exists pg_trgm"
+DB_HOST=${DB_HOST:-db}
+DB_USERNAME=${DB_USERNAME:-db}
+DB_PASSWORD=${DB_PASSWORD:-db}
+
+export PGPASSWORD=$DB_PASSWORD
+psql -U $DB_USERNAME -h $DB_HOST -c 'drop database if exists aspirecloud_testing'
+psql -U $DB_USERNAME -h $DB_HOST -c "create database aspirecloud_testing owner $DB_USERNAME"
+psql -U $DB_USERNAME -h $DB_HOST -c "create extension if not exists pg_trgm"
 php artisan migrate --database=test --force --no-interaction
 php artisan db:seed --database=test

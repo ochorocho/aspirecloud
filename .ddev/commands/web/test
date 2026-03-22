@@ -1,0 +1,15 @@
+#!/bin/bash
+
+## Description: Run all tests (unit + functional)
+## Usage: test [flags]
+## Example: "ddev test" or "ddev test --testsuite=Unit"
+## ExecRaw: true
+
+set -e
+
+if [ $# -eq 0 ]; then
+    meta/bin/reset-testing-database
+    vendor/bin/pest
+else
+    vendor/bin/pest "$@"
+fi

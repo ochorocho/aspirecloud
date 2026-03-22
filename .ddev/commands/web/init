@@ -1,0 +1,46 @@
+#!/bin/bash
+
+## Description: Initialize or re-initialize the project (safe to run multiple times)
+## Usage: init
+## Example: "ddev init"
+
+set -e
+
+echo "==> Installing PHP dependencies..."
+composer install
+
+echo "==> Installing JavaScript dependencies..."
+npm install
+
+echo "==> Building frontend assets..."
+npm run build
+
+# Only generate APP_KEY if not already set
+if ! grep -q "^APP_KEY=base64:" .env 2>/dev/null; then
+    echo "==> Generating APP_KEY..."
+    php artisan key:generate
+else
+    echo "==> APP_KEY already set, skipping"
+fi
+
+# Migrate (only runs new migrations, safe on re-run)
+echo "==> Running database migrations..."
+php artisan migrate --force --no-interaction || {
+    echo ""
+    echo "Migration failed. If this is not a fresh install, try:"
+    echo "  ddev reset-database   (drops and recreates the database)"
+    echo "  ddev init             (then run init again)"
+    exit 1
+}
+
+# Seed (all seeders have idempotent checks)
+echo "==> Seeding database..."
+php artisan db:seed --force --no-interaction
+
+# Testing database
+echo "==> Setting up testing database..."
+meta/bin/reset-testing-database
+
+echo ""
+echo "Project initialized successfully!"
+echo "Visit: https://aspirecloud.ddev.site"

@@ -24,10 +24,12 @@
         <env name="CACHE_STORE" value="array"/>
         <env name="DB_CONNECTION" value="test"/>
         <env name="DB_DATABASE" value="aspirecloud_testing"/>
-        <env name="DB_HOST" value="db.aspiredev.org"/>
-        <env name="DB_PASSWORD" value="password"/>
+        <env name="DB_HOST" value="db"/>
+        <env name="DB_PASSWORD" value="db"/>
         <env name="DB_PORT" value="5432"/>
-        <env name="DB_USERNAME" value="postgres"/>
+        <env name="DB_USERNAME" value="db"/>
+        <env name="DOWNLOAD_BASE" value="https://api.aspiredev.org/download/"/>
+        <env name="APP_URL" value="https://api.aspiredev.org"/>
         <env name="ELASTICSEARCH_AUTO_INDEX" value="false" />
         <env name="LOG_CHANNEL" value="null"/>
         <env name="LOG_LEVEL" value="debug"/>

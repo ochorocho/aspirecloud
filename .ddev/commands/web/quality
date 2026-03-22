@@ -1,0 +1,10 @@
+#!/bin/bash
+
+## Description: Run PHPStan static analysis
+## Usage: quality [flags]
+## Example: "ddev quality"
+## ExecRaw: true
+
+set -e
+
+vendor/bin/phpstan --memory-limit=1G analyse "$@"

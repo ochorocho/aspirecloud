@@ -1,0 +1,13 @@
+#!/bin/bash
+
+## Description: Run code style checks and static analysis
+## Usage: lint
+## Example: "ddev lint"
+
+set -e
+
+echo "==> Running code style checks..."
+vendor/bin/pint --test
+
+echo "==> Running static analysis..."
+vendor/bin/phpstan --memory-limit=1G analyse

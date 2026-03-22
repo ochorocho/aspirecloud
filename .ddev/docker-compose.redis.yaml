@@ -1,0 +1,14 @@
+services:
+  redis:
+    container_name: ddev-${DDEV_SITENAME}-redis
+    image: redis:latest
+    expose:
+      - "6379"
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:

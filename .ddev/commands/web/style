@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Run code style checks (Pint)
+## Usage: style
+## Example: "ddev style"
+
+set -e
+
+vendor/bin/pint --test

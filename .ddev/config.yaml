@@ -1,0 +1,26 @@
+name: aspirecloud
+type: laravel
+docroot: public
+php_version: "8.4"
+database:
+  type: postgres
+  version: 16
+nodejs_version: "22"
+webserver_type: nginx-fpm
+composer_version: "2"
+
+webimage_extra_packages:
+  - postgresql-client
+
+web_environment:
+  - ELASTICSEARCH_HOST=http://elasticsearch:9200
+  - REDIS_HOST=redis
+  - REDIS_PORT=6379
+  - REDIS_CLIENT=predis
+
+web_extra_daemons:
+  - name: queue-worker
+    command: "php /var/www/html/artisan queue:work --timeout=60 --tries=5"
+    directory: /var/www/html
+
+hooks: {}

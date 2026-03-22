@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Run code style fixes (Pint)
+## Usage: fix-style
+## Example: "ddev fix-style"
+
+set -e
+
+vendor/bin/pint

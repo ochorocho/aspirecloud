@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Build production Docker image
+## Usage: build-prod
+## Example: "ddev build-prod"
+
+set -e
+
+docker build --target prod -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .

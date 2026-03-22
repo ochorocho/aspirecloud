@@ -1,0 +1,19 @@
+#!/bin/bash
+
+## Description: Run all quality checks: lint + tests
+## Usage: check
+## Example: "ddev check"
+
+set -e
+
+echo "==> Running code style checks..."
+vendor/bin/pint --test
+
+echo "==> Running static analysis..."
+vendor/bin/phpstan --memory-limit=1G analyse
+
+echo "==> Resetting testing database..."
+meta/bin/reset-testing-database
+
+echo "==> Running tests..."
+vendor/bin/pest

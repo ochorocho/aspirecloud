@@ -13,7 +13,7 @@ COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
     && apt update && apt install -y nodejs \
-    && npm install -g yarn
+    && echo "Node.js $(node --version) installed"
 
 
 RUN git config --global --add safe.directory /app && groupadd --gid 100000 app \
@@ -41,7 +41,7 @@ USER app
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app \
     && mkdir -p storage/logs storage/app/public storage/app/private storage/framework/sessions storage/framework/views storage/framework/cache/data
 
-RUN yarn install && rm -rf public/build && yarn run build
+RUN npm install && rm -rf public/build && npm run build
 
 USER root
 

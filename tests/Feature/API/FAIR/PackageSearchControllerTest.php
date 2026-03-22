@@ -107,19 +107,30 @@ it('filters by type', function () {
 });
 
 it('returns all packages of type when no query, newest first', function () {
-    Package::factory()
+    // Sort is by MAX(package_releases.created_at), so we must control release dates
+    $oldPackage = Package::factory()
         ->withAuthors()
-        ->withReleases()
         ->withMetas()
         ->typo3Extension()
         ->create(['name' => 'Old Package', 'slug' => 'old-package', 'created_at' => now()->subDays(10)]);
+    $oldPackage->releases()->createMany(
+        PackageReleaseFactory::new()->count(1)->make([
+            'package_id' => $oldPackage->id,
+            'created_at' => now()->subDays(10),
+        ])->toArray(),
+    );
 
-    Package::factory()
+    $newPackage = Package::factory()
         ->withAuthors()
-        ->withReleases()
         ->withMetas()
         ->typo3Extension()
         ->create(['name' => 'New Package', 'slug' => 'new-package', 'created_at' => now()]);
+    $newPackage->releases()->createMany(
+        PackageReleaseFactory::new()->count(1)->make([
+            'package_id' => $newPackage->id,
+            'created_at' => now(),
+        ])->toArray(),
+    );
 
     $response = $this->getJson('/packages/typo3-extension')
         ->assertOk()
