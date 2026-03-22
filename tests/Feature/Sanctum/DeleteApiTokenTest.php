@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Models\User;
@@ -18,7 +19,7 @@ test('api tokens can be deleted', function () {
         'abilities' => ['create', 'read'],
     ]);
 
-    $this->delete('/user/api-tokens/' . $token->id);
+    $this->delete('/user/api-tokens/'.$token->id);
 
     expect($user->fresh()->tokens)->toHaveCount(0);
-})->skip(fn () => !Features::hasApiFeatures(), 'API support is not enabled.');
+})->skip(fn () => ! Features::hasApiFeatures(), 'API support is not enabled.');

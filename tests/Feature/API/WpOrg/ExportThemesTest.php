@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Models\WpOrg\Theme;
@@ -12,9 +13,10 @@ beforeEach(function () {
 function export_themes_uri(array $params = []): string
 {
     $uri = '/export/themes';
-    if (!empty($params)) {
-        $uri .= '?' . http_build_query($params);
+    if (! empty($params)) {
+        $uri .= '?'.http_build_query($params);
     }
+
     return $uri;
 }
 

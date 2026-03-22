@@ -68,53 +68,53 @@ describe('Download URL Rewrites (Plugins)', function () {
     it('returns original url if no version found', function () {
         // real-world example from .org
         $metadata = [
-            "name" => "Universal Social Reputation",
-            "slug" => "acmesocial",
-            "version" => "1.0",
-            "author" => "<a href=\"https://profiles.wordpress.org/olorapino/\">olorapino</a>",
-            "author_profile" => "https://profiles.wordpress.org/olorapino/",
-            "contributors" => [
-                "olorapino" => [
-                    "profile" => "https://profiles.wordpress.org/olorapino/",
-                    "avatar" => "https://secure.gravatar.com/avatar/57a882c8f62c4f9b13bd7edfb58dd2b225e1137879c8a978ccbce98557671333?s=96&d=monsterid&r=g",
-                    "display_name" => "olorapino",
+            'name' => 'Universal Social Reputation',
+            'slug' => 'acmesocial',
+            'version' => '1.0',
+            'author' => '<a href="https://profiles.wordpress.org/olorapino/">olorapino</a>',
+            'author_profile' => 'https://profiles.wordpress.org/olorapino/',
+            'contributors' => [
+                'olorapino' => [
+                    'profile' => 'https://profiles.wordpress.org/olorapino/',
+                    'avatar' => 'https://secure.gravatar.com/avatar/57a882c8f62c4f9b13bd7edfb58dd2b225e1137879c8a978ccbce98557671333?s=96&d=monsterid&r=g',
+                    'display_name' => 'olorapino',
                 ],
             ],
-            "requires" => "4.6",
-            "tested" => "4.7.29",
-            "requires_php" => false,
-            "requires_plugins" => [
+            'requires' => '4.6',
+            'tested' => '4.7.29',
+            'requires_php' => false,
+            'requires_plugins' => [
             ],
-            "rating" => 0,
-            "ratings" => [0, 0, 0, 0, 0],
-            "num_ratings" => 0,
-            "support_url" => "https://wordpress.org/support/plugin/acmesocial/",
-            "support_threads" => 0,
-            "support_threads_resolved" => 0,
-            "active_installs" => 0,
-            "last_updated" => "2017-02-04 1:23am GMT",
-            "added" => "2017-02-02",
-            "homepage" => "http://unisocrep.herokuapp.com/",
-            "download_link" => "https://downloads.wordpress.org/plugin/acmesocial.zip", // no version in filename
-            "upgrade_notice" => [],
-            "screenshots" => [],
-            "tags" => [
-                "comments" => "comments",
-                "score" => "score",
-                "social" => "social",
-                "spam" => "spam",
-                "usr" => "USR",
+            'rating' => 0,
+            'ratings' => [0, 0, 0, 0, 0],
+            'num_ratings' => 0,
+            'support_url' => 'https://wordpress.org/support/plugin/acmesocial/',
+            'support_threads' => 0,
+            'support_threads_resolved' => 0,
+            'active_installs' => 0,
+            'last_updated' => '2017-02-04 1:23am GMT',
+            'added' => '2017-02-02',
+            'homepage' => 'http://unisocrep.herokuapp.com/',
+            'download_link' => 'https://downloads.wordpress.org/plugin/acmesocial.zip', // no version in filename
+            'upgrade_notice' => [],
+            'screenshots' => [],
+            'tags' => [
+                'comments' => 'comments',
+                'score' => 'score',
+                'social' => 'social',
+                'spam' => 'spam',
+                'usr' => 'USR',
             ],
-            "versions" => [], // This is the kicker, no versions exist
-            "business_model" => false,
-            "repository_url" => "",
-            "commercial_support_url" => "",
-            "donate_link" => "",
-            "banners" => [
-                "low" => "https://ps.w.org/acmesocial/assets/banner-772x250.png?rev=1593412",
-                "high" => "https://ps.w.org/acmesocial/assets/banner-1544x500.png?rev=1593412",
+            'versions' => [], // This is the kicker, no versions exist
+            'business_model' => false,
+            'repository_url' => '',
+            'commercial_support_url' => '',
+            'donate_link' => '',
+            'banners' => [
+                'low' => 'https://ps.w.org/acmesocial/assets/banner-772x250.png?rev=1593412',
+                'high' => 'https://ps.w.org/acmesocial/assets/banner-1544x500.png?rev=1593412',
             ],
-            "preview_link" => "",
+            'preview_link' => '',
             'aspiresync_meta' => [
                 'type' => 'plugin',
                 'slug' => '0-errors',

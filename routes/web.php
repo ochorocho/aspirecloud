@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Http\Controllers\Web\ExtensionController;
@@ -20,4 +21,4 @@ Route::middleware([
     })->name('dashboard');
 });
 
-require __DIR__ . '/inc/admin-web.php';
+require __DIR__.'/inc/admin-web.php';

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Utils;
@@ -10,6 +11,7 @@ class Regex
     {
         $matches = [];
         \Safe\preg_match($pattern, $subject, $matches);
+
         return $matches ?? []; // $matches cannot be null, but mago thinks otherwise ¯\_(ツ)_/¯
     }
 
@@ -17,6 +19,7 @@ class Regex
     {
         $result = \Safe\preg_replace($pattern, $replacement, $subject, $limit);
         assert(is_string($result)); // cannot be otherwise when the parameters are strings
+
         return $result;
     }
 

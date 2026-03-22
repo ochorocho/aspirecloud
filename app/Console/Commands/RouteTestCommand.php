@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RouteTestCommand extends Command
 {
     protected $signature = 'route:test {uri}';
+
     protected $description = 'Match path against routes';
 
     public function handle(): int
@@ -23,6 +25,7 @@ class RouteTestCommand extends Command
         } catch (NotFoundHttpException) {
             $this->fail("Route not found for $uri");
         }
+
         return 0;
     }
 }

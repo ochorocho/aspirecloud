@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Services\Repo\BarePluginRepo;
 
 test('BarePluginRepo basics', function () {
-    $repo = new BarePluginRepo();
+    $repo = new BarePluginRepo;
     $plugin = $repo->createPlugin(
         slug: 'test',
         name: 'test',

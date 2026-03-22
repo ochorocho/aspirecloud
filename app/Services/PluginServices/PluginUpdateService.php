@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\PluginServices;
@@ -14,16 +15,18 @@ class PluginUpdateService
     public function checkForUpdates(PluginUpdateCheckRequest $req): PluginUpdateCheckResponse
     {
         $bySlug = $req->plugins
-            ->filter(fn(PluginUpdateRequestItem $item) => $item->hasValidUpdateUri())
-            ->mapWithKeys(fn($item, $path) => [$this->extractSlug($path) => [$path, $item]]);
+            ->filter(fn (PluginUpdateRequestItem $item) => $item->hasValidUpdateUri())
+            ->mapWithKeys(fn ($item, $path) => [$this->extractSlug($path) => [$path, $item]]);
 
         $isUpdated = function (Plugin $plugin) use ($bySlug): bool {
             $item = $bySlug[$plugin->slug][1];
+
             return version_compare($plugin->version, $item->Version ?? '', '>');
         };
 
         $mkUpdate = function (Plugin $plugin) use ($bySlug) {
-            $file = (string)$bySlug[$plugin->slug][0];
+            $file = (string) $bySlug[$plugin->slug][0];
+
             return [$file => PluginUpdateResponseItem::from($plugin)->with(plugin: $file)];
         };
 
@@ -32,7 +35,7 @@ class PluginUpdateService
             ->whereIn('slug', $bySlug->keys())
             ->get()
             ->partition($isUpdated)
-            ->map(fn($collection) => $collection->mapWithKeys($mkUpdate));
+            ->map(fn ($collection) => $collection->mapWithKeys($mkUpdate));
 
         return PluginUpdateCheckResponse::from(plugins: $updates, no_update: $no_updates, translations: collect([]));
     }

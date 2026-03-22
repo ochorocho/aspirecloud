@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories\WpOrg;
@@ -18,11 +19,11 @@ class ClosedPluginFactory extends Factory
         $slug = Str::slug($name);
 
         $reasons = [
-            "author-request",
-            "guideline-violation",
-            "licensing-trademark-violation",
-            "merged-into-core",
-            "security-issue",
+            'author-request',
+            'guideline-violation',
+            'licensing-trademark-violation',
+            'merged-into-core',
+            'security-issue',
         ];
 
         return [

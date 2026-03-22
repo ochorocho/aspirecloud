@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // This one file should contain all boot-time actions relevant to the app.
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if (!config('app.report_deprecations')) {
+        if (! config('app.report_deprecations')) {
             // Both Laravel and Symfony try to force error_reporting(-1) with no way out, and it's super annoying.
             error_reporting(E_ALL & ~E_DEPRECATED);
         }
@@ -33,12 +34,12 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        $isDev = !$this->app->isProduction();
+        $isDev = ! $this->app->isProduction();
         Model::preventLazyLoading($isDev);
         Model::preventSilentlyDiscardingAttributes($isDev);
 
         // SuperAdmins bypass all auth checks
-        Gate::before(fn(User $user) => $user->hasRole(Role::SuperAdmin) ?: null);
+        Gate::before(fn (User $user) => $user->hasRole(Role::SuperAdmin) ?: null);
 
         // make a vague stab at functional abstraction ;)
         $this->bootRoutes();

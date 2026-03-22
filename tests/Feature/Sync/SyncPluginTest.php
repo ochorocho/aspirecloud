@@ -98,7 +98,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->slug)->toBe('0-errors')
             ->and($plugin->name)->toBe('0-Errors')
             ->and($plugin->description)->toStartWith(
-                "<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout",
+                '<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout',
             )
             ->and($plugin->short_description)->toBe(
                 'Shows generated php site errors only to the admin via a drop down panel and hides them from the public. Email Alerts the admin of errors.',
@@ -132,13 +132,13 @@ describe('Sync Plugins', function () {
             ->and($plugin->homepage)->toBe('http://example.org/')
             ->and($plugin->sections)->toHaveKeys(['description', 'installation', 'faq', 'changelog', 'reviews'])
             ->and($plugin->sections['description'])->toStartWith(
-                "<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout",
+                '<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout',
             )
             ->and($plugin->sections['installation'])->toBe(
-                "<p>Upload the 0-Errors Plugin Base plugin to your blog and activate it. It would work as is.</p>",
+                '<p>Upload the 0-Errors Plugin Base plugin to your blog and activate it. It would work as is.</p>',
             )
-            ->and($plugin->sections['faq'])->toStartWith("<h4>Is it compatible with latest WordPress?</h4>")
-            ->and($plugin->sections['changelog'])->toStartWith("<h4>0.2</h4>")
+            ->and($plugin->sections['faq'])->toStartWith('<h4>Is it compatible with latest WordPress?</h4>')
+            ->and($plugin->sections['changelog'])->toStartWith('<h4>0.2</h4>')
             ->and($plugin->sections['reviews'])->toBeEmpty()
             ->and($plugin->upgrade_notice)->toBeEmpty()
             ->and($plugin->screenshots)->toBeEmpty()
@@ -168,11 +168,9 @@ describe('Sync Plugins', function () {
             ]);
     });
 
-    it('throws an exception if loaded as ClosedPlugin', fn () =>
-        expect(fn() => ClosedPlugin::fromSyncMetadata($md_0errors))->toThrow(InvalidArgumentException::class)
+    it('throws an exception if loaded as ClosedPlugin', fn () => expect(fn () => ClosedPlugin::fromSyncMetadata($md_0errors))->toThrow(InvalidArgumentException::class)
     );
 
-    it('throws an exception if loaded as Theme', fn () =>
-        expect(fn() => Theme::fromSyncMetadata($md_0errors))->toThrow(InvalidArgumentException::class)
+    it('throws an exception if loaded as Theme', fn () => expect(fn () => Theme::fromSyncMetadata($md_0errors))->toThrow(InvalidArgumentException::class)
     );
 });

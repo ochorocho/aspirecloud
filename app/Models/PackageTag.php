@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -19,10 +20,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class PackageTag extends BaseModel
 {
-    use HasUuids;
-
     /** @use HasFactory<PackageTagFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     protected $table = 'package_tags';
 

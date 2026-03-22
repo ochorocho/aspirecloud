@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -9,7 +10,7 @@ abstract class Command extends \Illuminate\Console\Command
     /**
      * Get the value of a command argument.
      *
-     * @param string|null $key
+     * @param  string|null  $key
      * @return ($key is null ? array<array-key, mixed> : string|bool|null)
      */
     public function argument($key = null): array|string|bool|null

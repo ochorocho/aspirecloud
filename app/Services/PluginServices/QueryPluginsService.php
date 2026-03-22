@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\PluginServices;
@@ -30,21 +31,22 @@ class QueryPluginsService
         // Ad hoc pipeline because Laravel's Pipeline class is awful
         $callbacks = collect();
 
-        !empty($anyTags) && $callbacks->push(fn($q) => self::applyTagAny($q, $anyTags));
-        !empty($tagAnd) && $callbacks->push(fn($q) => self::applyTagAll($q, $tagAnd));
-        !empty($tagNot) && $callbacks->push(fn($q) => self::applyTagNot($q, $tagNot));
+        ! empty($anyTags) && $callbacks->push(fn ($q) => self::applyTagAny($q, $anyTags));
+        ! empty($tagAnd) && $callbacks->push(fn ($q) => self::applyTagAll($q, $tagAnd));
+        ! empty($tagNot) && $callbacks->push(fn ($q) => self::applyTagNot($q, $tagNot));
 
-        $search && $callbacks->push(fn($q) => self::applySearchWeighted($q, $search, $req));
-        $author && $callbacks->push(fn($q) => self::applyAuthor($q, $author));
-        !$search && $callbacks->push(fn($q) => self::applyBrowse($q, $browse));
+        $search && $callbacks->push(fn ($q) => self::applySearchWeighted($q, $search, $req));
+        $author && $callbacks->push(fn ($q) => self::applyAuthor($q, $author));
+        ! $search && $callbacks->push(fn ($q) => self::applyBrowse($q, $browse));
         /**
          * @var Builder<Plugin> $query
+         *
          * @psalm-suppress ReservedWord (psalm is broken here, and this cannot be suppressed in psalm.xml)
          */
-        $query = $callbacks->reduce(fn(Builder $q, \Closure $callback) => $callback($q), Plugin::query());
+        $query = $callbacks->reduce(fn (Builder $q, \Closure $callback) => $callback($q), Plugin::query());
 
         $total = $query->count();
-        $totalPages = (int)ceil($total / $perPage);
+        $totalPages = (int) ceil($total / $perPage);
 
         $plugins = $query
             ->with('contributors')
@@ -52,18 +54,18 @@ class QueryPluginsService
             ->limit($perPage)
             ->get()
             ->unique('slug')
-            ->map(fn($plugin) => Plugins\PluginResponse::from($plugin));
+            ->map(fn ($plugin) => Plugins\PluginResponse::from($plugin));
 
         return Plugins\QueryPluginsResponse::from([
             'plugins' => $plugins,
-            'info'    => ['page' => $page, 'pages' => $totalPages, 'results' => $total],
+            'info' => ['page' => $page, 'pages' => $totalPages, 'results' => $total],
         ]);
     }
 
     /**
      * Apply weighted search with proper scoring for each union clause
      *
-     * @param Builder<Plugin> $query
+     * @param  Builder<Plugin>  $query
      * @return Builder<Plugin> Returns a new query with weighted search applied
      */
     public static function applySearchWeighted(
@@ -77,12 +79,12 @@ class QueryPluginsService
         $sortColumn = self::browseToSortColumn($request->browse);
 
         return $query
-            ->where(fn($q) => $q
+            ->where(fn ($q) => $q
                 ->where('slug', $search)
                 ->orWhere('name', 'ilike', "$search%")
-                ->orWhereRaw("slug %> ?", [$wordchars])
-                ->orWhereRaw("name %> ?", [$wordchars])
-                ->orWhereRaw("short_description %> ?", [$wordchars])
+                ->orWhereRaw('slug %> ?', [$wordchars])
+                ->orWhereRaw('name %> ?', [$wordchars])
+                ->orWhereRaw('short_description %> ?', [$wordchars])
                 ->orWhereFullText('description', $search),
             )
             ->selectRaw("plugins.*,
@@ -113,58 +115,58 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     public static function applyAuthor(Builder $query, string $author): Builder
     {
-        return $query->where(fn(Builder $q) => $q
+        return $query->where(fn (Builder $q) => $q
             ->whereRaw("author %> '$author'")
             ->orWhereHas(
                 'contributors',
-                fn(Builder $q) => $q
+                fn (Builder $q) => $q
                     ->whereRaw("user_nicename %> '$author'")
                     ->orWhereRaw("display_name %> '$author'"),
             ));
     }
 
     /**
-     * @param Builder<Plugin> $query
-     * @param list<string>    $tags
+     * @param  Builder<Plugin>  $query
+     * @param  list<string>  $tags
      */
     public static function applyTagAny(Builder $query, array $tags): Builder
     {
-        return $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+        return $query->whereHas('tags', fn (Builder $q) => $q->whereIn('slug', $tags));
     }
 
     /**
-     * @param Builder<Plugin> $query
-     * @param list<string>    $tags
+     * @param  Builder<Plugin>  $query
+     * @param  list<string>  $tags
      */
     public static function applyTagAll(Builder $query, array $tags): Builder
     {
         return $query->whereHas(
             'tags',
-            fn(Builder $q) => $q->whereIn('slug', $tags),
+            fn (Builder $q) => $q->whereIn('slug', $tags),
             '>=',
             count($tags),
         );
     }
 
     /**
-     * @param Builder<Plugin> $query
-     * @param list<string>    $tags
+     * @param  Builder<Plugin>  $query
+     * @param  list<string>  $tags
      */
     public static function applyTagNot(Builder $query, array $tags): Builder
     {
-        return $query->whereDoesntHave('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+        return $query->whereDoesntHave('tags', fn (Builder $q) => $q->whereIn('slug', $tags));
     }
 
     /**
      * Apply sorting based on browse parameter
      *
-     * @param Builder<Plugin> $query
+     * @param  Builder<Plugin>  $query
      */
     public static function applyBrowse(Builder $query, string $browse): Builder
     {
         if ($browse === 'featured') {
-            $query->where(fn($q) => $q
-                ->where(fn($q) => $q->where('rating', '>=', 80)->where('num_ratings', '>', 100))
+            $query->where(fn ($q) => $q
+                ->where(fn ($q) => $q->where('rating', '>=', 80)->where('num_ratings', '>', 100))
                 ->orWhere('ac_origin', '!=', 'wp_org')
             );
         }

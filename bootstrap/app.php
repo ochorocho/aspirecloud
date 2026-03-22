@@ -1,6 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
+use App\Http\Middleware\AuthOptional;
 use App\Http\Middleware\TrustProxies;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -14,6 +16,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 $apiPaths = [
     'secret-key/*',
@@ -28,9 +33,9 @@ $apiPaths = [
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
-        api: __DIR__ . '/../routes/api.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
         apiPrefix: '',
     )
@@ -56,11 +61,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             // https://spatie.be/docs/laravel-permission/v6/basic-usage/middleware
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
 
-            'auth.optional' => App\Http\Middleware\AuthOptional::class,
+            'auth.optional' => AuthOptional::class,
         ]);
 
     })
@@ -76,7 +81,7 @@ return Application::configure(basePath: dirname(__DIR__))
          * on the api endpoints
          * */
         $exceptions->render(function (AuthenticationException $e, Request $request) use ($apiPaths) {
-            if ($request->expectsJson() || collect($apiPaths)->contains(fn($path) => $request->is($path))) {
+            if ($request->expectsJson() || collect($apiPaths)->contains(fn ($path) => $request->is($path))) {
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
         });

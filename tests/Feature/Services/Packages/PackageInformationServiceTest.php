@@ -19,7 +19,7 @@ test('packageInformation with DID returns matching package', function () {
     ]);
 
     // Create the service
-    $service = new PackageInformationService();
+    $service = new PackageInformationService;
 
     $package = $service->findByDID('fake:test-package');
     assert($package !== null);

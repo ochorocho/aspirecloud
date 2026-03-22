@@ -12,9 +12,13 @@ class ServeHappyController extends Controller
 {
     // "Recommended" according to an ancient wp.org api anyway.  Not useful for anything but mimicking said api.
     private const string RECOMMENDED_PHP = '7.4';
+
     private const string MINIMUM_PHP = '7.2.24';
+
     private const string SUPPORTED_PHP = '7.4';
+
     private const string SECURE_PHP = '7.4';
+
     private const string ACCEPTABLE_PHP = '7.4';
 
     public function __invoke(Request $request): JsonResponse

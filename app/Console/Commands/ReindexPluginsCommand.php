@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -14,13 +15,14 @@ class ReindexPluginsCommand extends Command
 
     protected $description = 'Reindex all plugins into Elasticsearch';
 
-    public function __construct(private readonly IndexService $index) {
+    public function __construct(private readonly IndexService $index)
+    {
         parent::__construct();
     }
 
     public function handle(): int
     {
-        $chunkSize = (int)$this->option('chunk') ?: 500;
+        $chunkSize = (int) $this->option('chunk') ?: 500;
 
         $this->info("Reindexing plugins in chunks of {$chunkSize}...");
 

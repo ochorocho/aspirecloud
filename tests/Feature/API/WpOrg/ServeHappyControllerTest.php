@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 it('serves happy', function () {
@@ -7,11 +8,11 @@ it('serves happy', function () {
     $response
         ->assertStatus(200)
         ->assertJson([
-            "recommended_version" => "7.4",
-            "minimum_version" => "7.2.24",
-            "is_supported" => true,
-            "is_secure" => true,
-            "is_acceptable" => true,
+            'recommended_version' => '7.4',
+            'minimum_version' => '7.2.24',
+            'is_supported' => true,
+            'is_secure' => true,
+            'is_acceptable' => true,
         ]);
 });
 
@@ -21,11 +22,11 @@ it('shows false for insecure versions', function () {
     $response
         ->assertStatus(200)
         ->assertJson([
-            "recommended_version" => "7.4",
-            "minimum_version" => "7.2.24",
-            "is_supported" => false,
-            "is_secure" => false,
-            "is_acceptable" => false,
+            'recommended_version' => '7.4',
+            'minimum_version' => '7.2.24',
+            'is_supported' => false,
+            'is_secure' => false,
+            'is_acceptable' => false,
         ]);
 });
 

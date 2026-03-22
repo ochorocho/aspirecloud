@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\PluginServices;
@@ -32,7 +33,7 @@ class PluginHotTagsService
         //     ->get();
 
         return PluginHotTagsResponse::collect($hotTags)
-            ->mapWithKeys(fn(PluginHotTagsResponse $tag) => [$tag->slug => $tag])
+            ->mapWithKeys(fn (PluginHotTagsResponse $tag) => [$tag->slug => $tag])
             ->toArray();
     }
 }

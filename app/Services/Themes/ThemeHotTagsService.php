@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Themes;
@@ -32,7 +33,7 @@ class ThemeHotTagsService
         //     ->get();
 
         return ThemeHotTagsResponse::collect($hotTags)
-            ->mapWithKeys(fn(ThemeHotTagsResponse $tag) => [$tag->slug => $tag])
+            ->mapWithKeys(fn (ThemeHotTagsResponse $tag) => [$tag->slug => $tag])
             ->toArray();
     }
 }

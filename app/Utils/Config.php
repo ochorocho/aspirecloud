@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Utils;
@@ -11,8 +12,8 @@ class Config
     public static function stringList(string $input, string $delimiter = ','): array
     {
         return collect(explode($delimiter, $input))
-            ->map(fn(string $item) => trim($item))
-            ->filter(fn(string $item) => $item !== '')
+            ->map(fn (string $item) => trim($item))
+            ->filter(fn (string $item) => $item !== '')
             ->values()
             ->toArray();
     }
@@ -33,13 +34,14 @@ class Config
         if (str_starts_with($trimmed, '[')) {
             /** @var array<int, mixed> $decoded */
             $decoded = json_decode($trimmed, true);
+
             return array_values(array_filter(
-                array_map(fn(mixed $item) => is_array($item) && isset($item['url']) ? $item : null, $decoded),
+                array_map(fn (mixed $item) => is_array($item) && isset($item['url']) ? $item : null, $decoded),
             ));
         }
 
         return array_map(
-            fn(string $url) => ['url' => $url],
+            fn (string $url) => ['url' => $url],
             self::stringList($input),
         );
     }

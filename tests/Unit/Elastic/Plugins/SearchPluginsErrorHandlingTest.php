@@ -1,12 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Actions\Elastic\SearchPlugins;
 use Elastic\Elasticsearch\Client;
 
 it('handles elasticsearch exceptions', function () {
-    $mockClient = new class {
-        public function search(array $params) {
+    $mockClient = new class
+    {
+        public function search(array $params)
+        {
             throw new Exception('Connection failed');
         }
     };
@@ -25,6 +28,3 @@ it('handles elasticsearch exceptions', function () {
         ->and($result)->toHaveKey('error')
         ->and($result['error'])->toBe('Connection failed');
 });
-
-
-

@@ -139,6 +139,6 @@ describe('Sync Themes', function () {
     });
 
     it('throws an exception if loaded as ClosedPlugin', function () use ($md_100b) {
-        expect(fn() => ClosedPlugin::fromSyncMetadata($md_100b))->toThrow(InvalidArgumentException::class);
+        expect(fn () => ClosedPlugin::fromSyncMetadata($md_100b))->toThrow(InvalidArgumentException::class);
     });
 });

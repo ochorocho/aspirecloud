@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Themes;
@@ -12,7 +13,8 @@ class ThemeInformationService
 {
     public function info(ThemeInformationRequest $req): ThemeResponse
     {
-        $theme = Theme::query()->where('slug', $req->slug)->first() or throw new NotFoundException("Theme not found");
+        $theme = Theme::query()->where('slug', $req->slug)->first() or throw new NotFoundException('Theme not found');
+
         return ThemeResponse::from($theme)->withFields($req->fields ?? []);
     }
 }

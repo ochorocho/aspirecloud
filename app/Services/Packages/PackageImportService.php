@@ -3,8 +3,8 @@
 namespace App\Services\Packages;
 
 use App\Models\Package;
-use App\Values\Packages\PackageData;
 use App\Values\Packages\FairMetadata;
+use App\Values\Packages\PackageData;
 
 class PackageImportService
 {
@@ -26,9 +26,10 @@ class PackageImportService
         }
         $package?->delete();
 
-        //$this->info("LOAD: $did");
+        // $this->info("LOAD: $did");
 
         $package = Package::fromPackageData(PackageData::from($fairMetadata));
+
         return $package;
     }
 }

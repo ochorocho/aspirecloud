@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Actions\Elastic\SearchPlugins;
@@ -65,4 +66,3 @@ it('sorts by different browse types', function ($browse, $expectedField) {
     ['featured', 'rating'],
     ['popular', 'active_installs'],
 ]);
-

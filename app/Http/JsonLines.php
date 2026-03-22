@@ -16,7 +16,7 @@ trait JsonLines
         try {
             while (($line = fgets($handle)) !== false) {
                 $line = trim($line);
-                if (!$line) {
+                if (! $line) {
                     continue;
                 }
                 yield JSON::toAssoc($line);

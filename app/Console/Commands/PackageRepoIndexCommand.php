@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -55,7 +56,7 @@ class PackageRepoIndexCommand extends Command
                 foreach ($packages as $did) {
                     try {
                         DB::transaction(
-                            fn() => $pipeline
+                            fn () => $pipeline
                                 ->send($did)
                                 ->through($stages)
                                 ->thenReturn(),
@@ -90,6 +91,7 @@ class PackageRepoIndexCommand extends Command
         $path = $this->currentRepo['packages_path']
             ?? config('fair.paths.packages', '/packages');
         assert(is_string($path));
+
         return trim($path, '/');
     }
 
@@ -110,7 +112,7 @@ class PackageRepoIndexCommand extends Command
     /** @return array<string, string> */
     private function getRepoPackages(): array
     {
-        $url = $this->repoUrl() . '/' . $this->packagesPath();
+        $url = $this->repoUrl().'/'.$this->packagesPath();
         $this->info("Fetching packages from $url");
 
         $response = $this->httpClient()->get($url);
@@ -120,9 +122,10 @@ class PackageRepoIndexCommand extends Command
         }
 
         $data = $response->json();
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             throw new Exception("Invalid JSON from $url");
         }
+
         return $data;
     }
 
@@ -133,12 +136,13 @@ class PackageRepoIndexCommand extends Command
     private function extractSlug(string $did): string
     {
         $parts = explode(':', $did);
+
         return end($parts);
     }
 
     private function readPackageMetadata(string $did, Closure $next): void
     {
-        $baseUrl = $this->repoUrl() . '/' . $this->packagesPath();
+        $baseUrl = $this->repoUrl().'/'.$this->packagesPath();
 
         if ($this->useSlug) {
             $identifier = $this->extractSlug($did);
@@ -148,13 +152,13 @@ class PackageRepoIndexCommand extends Command
 
         $this->info("Fetching package $did from {$this->repoUrl()}");
 
-        $response = $this->httpClient()->get($baseUrl . '/' . $identifier);
+        $response = $this->httpClient()->get($baseUrl.'/'.$identifier);
 
         // Auto-detect: if DID-based fetch returns 404, retry with slug
-        if ($response->status() === 404 && !$this->useSlug && $identifier !== $this->extractSlug($did)) {
+        if ($response->status() === 404 && ! $this->useSlug && $identifier !== $this->extractSlug($did)) {
             $slug = $this->extractSlug($did);
             $this->warn("DID lookup failed, retrying with slug '$slug' (will use slugs for remaining packages)");
-            $response = $this->httpClient()->get($baseUrl . '/' . $slug);
+            $response = $this->httpClient()->get($baseUrl.'/'.$slug);
             if ($response->successful()) {
                 $this->useSlug = true;
             }
@@ -164,7 +168,7 @@ class PackageRepoIndexCommand extends Command
             throw new Exception("Failed to fetch package metadata for $did (HTTP {$response->status()})");
         }
         $metadata = $response->json();
-        if (!is_array($metadata)) {
+        if (! is_array($metadata)) {
             throw new Exception("Invalid JSON for package $did");
         }
         $next($metadata);

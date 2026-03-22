@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Models\WpOrg\ClosedPlugin;
@@ -12,9 +13,10 @@ beforeEach(function () {
 function export_closed_plugins_uri(array $params = []): string
 {
     $uri = '/export/closed_plugins';
-    if (!empty($params)) {
-        $uri .= '?' . http_build_query($params);
+    if (! empty($params)) {
+        $uri .= '?'.http_build_query($params);
     }
+
     return $uri;
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\Downloads;
@@ -19,8 +20,8 @@ class DownloadPluginController extends Controller
     public function __invoke(Request $request, string $file): Response
     {
         $matches = Regex::match('/^([a-zA-Z0-9-]+)\.(.+)\.zip$/', $file);
-        if (!$matches) {
-            return response()->json(['error' => "Invalid filename", 'filename' => $file], 400);
+        if (! $matches) {
+            return response()->json(['error' => 'Invalid filename', 'filename' => $file], 400);
         }
 
         return $this->downloadService->download(

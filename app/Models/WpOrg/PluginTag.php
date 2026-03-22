@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\WpOrg;
@@ -18,12 +19,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 final class PluginTag extends BaseModel
 {
-    //region Model Definition
-
-    use HasUuids;
-
     /** @use HasFactory<PluginTagFactory> */
     use HasFactory;
+
+    // region Model Definition
+
+    use HasUuids;
 
     protected $table = 'plugin_tags';
 
@@ -36,9 +37,9 @@ final class PluginTag extends BaseModel
         ];
     }
 
-    //endregion
+    // endregion
 
-    //region Relationships
+    // region Relationships
 
     /**
      * Define the relationship to plugins.
@@ -50,5 +51,5 @@ final class PluginTag extends BaseModel
         return $this->belongsToMany(Plugin::class, 'plugin_plugin_tags', 'plugin_tag_id', 'plugin_id');
     }
 
-    //endregion
+    // endregion
 }

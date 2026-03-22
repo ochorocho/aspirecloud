@@ -18,7 +18,7 @@ test('queryPlugins with search returns matching plugins', function () {
     Plugin::factory(3)->create();
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Create a request with search
     $request = new QueryPluginsRequest(
@@ -43,7 +43,7 @@ test('queryPlugins with tag returns plugins with that tag', function () {
     Plugin::factory(5)->create();
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Create a request with tag
     $request = new QueryPluginsRequest(
@@ -69,7 +69,7 @@ test('queryPlugins with author returns plugins by that author', function () {
     Plugin::factory(3)->create();
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Create a request with author
     $request = new QueryPluginsRequest(
@@ -105,7 +105,7 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
     ]);
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Test 'new' browse parameter
     $newRequest = new QueryPluginsRequest(
@@ -150,7 +150,7 @@ test('applySearchWeighted returns a query with weighted search conditions', func
     $query = Plugin::query();
 
     // Apply weighted search
-    $weightedQuery = QueryPluginsService::applySearchWeighted($query, 'test', new QueryPluginsRequest());
+    $weightedQuery = QueryPluginsService::applySearchWeighted($query, 'test', new QueryPluginsRequest);
 
     // Get the SQL for inspection
     $sql = $weightedQuery->toSql();
@@ -224,7 +224,7 @@ test('applySearchWeighted prioritizes relevance over install count', function ()
     ]);
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Create a request with search for "exact match"
     $request = new QueryPluginsRequest(
@@ -261,7 +261,7 @@ test('applySearchWeighted with name similarity vs description match', function (
     ]);
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Create a request with search for "similar"
     $request = new QueryPluginsRequest(
@@ -285,7 +285,7 @@ test('applySearchWeighted real world example #1', function () {
     Plugin::factory()->create([
         'name' => 'WooCommerce',
         'slug' => 'woocommerce',
-        'short_description' => "Everything you need to launch an online store in days and keep it growing for years. From your first sale to millions in revenue, Woo is with you.",
+        'short_description' => 'Everything you need to launch an online store in days and keep it growing for years. From your first sale to millions in revenue, Woo is with you.',
         'description' => '<p><a href="https://woocommerce.com/woocommerce/" rel="nofollow ugc">WooCommerce</a> is the open-source ecommerce platform f…d how it is used, please refer to our <a href="https://automattic.com/privacy/" rel="nofollow ugc">Privacy Policy</a>.</p>\n',
         'active_installs' => 10000000, // the max .org reports
     ]);
@@ -293,12 +293,12 @@ test('applySearchWeighted real world example #1', function () {
     Plugin::factory()->create([
         'name' => 'LiteSpeed Cache',
         'slug' => 'litespeed-cache',
-        'short_description' => "All-in-one unbeatable acceleration &amp; PageSpeed improvement: caching, image/CSS/JS optimization...",
+        'short_description' => 'All-in-one unbeatable acceleration &amp; PageSpeed improvement: caching, image/CSS/JS optimization...',
         'active_installs' => 7000000,
     ]);
 
     // Create the service
-    $service = new QueryPluginsService();
+    $service = new QueryPluginsService;
 
     // Create a request with search for "similar"
     $request = new QueryPluginsRequest(

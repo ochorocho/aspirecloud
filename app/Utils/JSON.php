@@ -12,7 +12,8 @@ class JSON
     public const DEFAULT_JSON_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
     /**
-     * @param array<string, mixed> $value
+     * @param  array<string, mixed>  $value
+     *
      * @throws JsonException
      */
     public static function fromAssoc(array $value, int $flags = self::DEFAULT_JSON_OPTIONS, int $depth = 512): string
@@ -22,6 +23,7 @@ class JSON
 
     /**
      * @return array<string, mixed>
+     *
      * @throws JsonException
      */
     public static function toAssoc(string $json, int $depth = 512, int $flags = self::DEFAULT_JSON_OPTIONS): array

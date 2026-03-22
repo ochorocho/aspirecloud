@@ -12,7 +12,7 @@ use Illuminate\Cache\Repository as CacheRepository;
 beforeEach(function () {
     Metric::truncate();
     config(['metrics.write_to_db_every' => 10]);
-    $this->cache = new CacheRepository(new ArrayStore());
+    $this->cache = new CacheRepository(new ArrayStore);
     $this->metricsService = new MetricsService($this->cache);
 });
 

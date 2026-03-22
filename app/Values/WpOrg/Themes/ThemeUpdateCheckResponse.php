@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Themes;
@@ -10,9 +11,9 @@ use Illuminate\Support\Collection;
 readonly class ThemeUpdateCheckResponse extends DTO
 {
     /**
-     * @param Collection<string, ThemeUpdateData> $themes
-     * @param Collection<string, ThemeUpdateData> $no_update
-     * @param Collection<array-key, mixed> $translations
+     * @param  Collection<string, ThemeUpdateData>  $themes
+     * @param  Collection<string, ThemeUpdateData>  $no_update
+     * @param  Collection<array-key, mixed>  $translations
      */
     public function __construct(
         public Collection $themes,
@@ -21,12 +22,12 @@ readonly class ThemeUpdateCheckResponse extends DTO
     ) {}
 
     /**
-     * @param iterable<array-key, Theme> $themes
-     * @param iterable<array-key, Theme> $no_update
+     * @param  iterable<array-key, Theme>  $themes
+     * @param  iterable<array-key, Theme>  $no_update
      */
     public static function fromResults(iterable $themes, iterable $no_update): self
     {
-        $mkUpdates = fn(iterable $items) => ThemeUpdateData::collect($items)->keyBy('theme');
+        $mkUpdates = fn (iterable $items) => ThemeUpdateData::collect($items)->keyBy('theme');
 
         return new self(
             themes: $mkUpdates($themes), // @mago-expect analysis:less-specific-argument

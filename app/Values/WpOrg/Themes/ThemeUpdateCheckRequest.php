@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Themes;
@@ -7,8 +8,6 @@ use App\Utils\JSON;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
 use Illuminate\Http\Request;
-
-use function Safe\json_decode;
 
 /**
  * @phpstan-type TranslationMetadata array{
@@ -21,10 +20,10 @@ use function Safe\json_decode;
 readonly class ThemeUpdateCheckRequest extends DTO
 {
     /**
-     * @param string $active slug of currently active theme
-     * @param array<string, array{Version: string, UpdateURI?: string}> $themes
-     * @param array<string, array<string, TranslationMetadata>> $translations
-     * @param list<string> $locale
+     * @param  string  $active  slug of currently active theme
+     * @param  array<string, array{Version: string, UpdateURI?: string}>  $themes
+     * @param  array<string, array<string, TranslationMetadata>>  $translations
+     * @param  list<string>  $locale
      */
     public function __construct(
         public string $active,
@@ -37,8 +36,9 @@ readonly class ThemeUpdateCheckRequest extends DTO
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $decode = fn($key) => JSON::tryToAssoc($request->post($key) ?? '[]') ?? [];
+        $decode = fn ($key) => JSON::tryToAssoc($request->post($key) ?? '[]') ?? [];
         $themes = $decode('themes');
+
         return [
             'active' => $themes['active'],
             'themes' => $themes['themes'],

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\Downloads;
@@ -15,7 +16,7 @@ class DownloadCoreController extends Controller
 
     public function __invoke(Request $request, string $version, string $extension): Response
     {
-        if (!\Safe\preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
+        if (! \Safe\preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
             return response()->json(['error' => 'Invalid WordPress version format'], 400);
         }
 

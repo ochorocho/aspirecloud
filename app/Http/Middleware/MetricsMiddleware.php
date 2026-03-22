@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Middleware;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MetricsMiddleware
 {
     private const string REQUESTS_COUNT = 'metrics_request_count';
+
     private const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
 
     public function __construct(
@@ -38,11 +40,11 @@ class MetricsMiddleware
             }
         }
 
-        if (!$route) {
+        if (! $route) {
             $route = $request->path();
         }
 
-        $key = self::REQUEST_COUNT_ROUTE . Regex::replace('/[\/\.\-\{\}\:]/', '_', $route);
+        $key = self::REQUEST_COUNT_ROUTE.Regex::replace('/[\/\.\-\{\}\:]/', '_', $route);
         $this->metricsService->increment($key);
 
         return $response;

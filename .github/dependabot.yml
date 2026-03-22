@@ -27,16 +27,6 @@ updates:
   # Package ecosystems below have lower traffic and we don't benefit much from weekly batches
 
   - package-ecosystem: docker
-    directory: /docker/cli
-    schedule:
-      interval: daily
-
-  - package-ecosystem: docker
-    directory: /docker/laravel-worker
-    schedule:
-      interval: daily
-
-  - package-ecosystem: docker
     directory: /docker/webapp
     schedule:
       interval: daily

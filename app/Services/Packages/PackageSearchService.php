@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Packages;
@@ -7,8 +8,8 @@ use App\Models\Package;
 use App\Models\PackageRelease;
 use App\Values\Packages\PackageSearchRequest;
 use Composer\Semver\Semver;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -123,7 +124,7 @@ class PackageSearchService
      * constraint strings per key (typically only 20-50 unique values), run Semver::satisfies()
      * on those, then use SQL to find package IDs whose releases match the valid constraints.
      *
-     * @param Builder<Package> $query
+     * @param  Builder<Package>  $query
      */
     private function applyRequiresFilter(Builder $query, PackageSearchRequest $request): void
     {
@@ -162,7 +163,7 @@ class PackageSearchService
             }
 
             $releaseQuery->whereRaw(
-                'package_releases.requires->>? IN (' . implode(',', array_fill(0, count($validConstraints), '?')) . ')',
+                'package_releases.requires->>? IN ('.implode(',', array_fill(0, count($validConstraints), '?')).')',
                 [$key, ...$validConstraints],
             );
         }
@@ -175,7 +176,7 @@ class PackageSearchService
     /**
      * Post-filter eager-loaded releases on paginated results using Composer\Semver.
      *
-     * @param LengthAwarePaginator<int, Package> $results
+     * @param  LengthAwarePaginator<int, Package>  $results
      * @return LengthAwarePaginator<int, Package>
      */
     private function filterPaginatedReleases(LengthAwarePaginator $results, PackageSearchRequest $request): LengthAwarePaginator
@@ -199,7 +200,7 @@ class PackageSearchService
     /**
      * Check if a release satisfies all version requirements using Composer\Semver.
      *
-     * @param array<string, string> $requires Key-value pairs of dependency name to user-provided version
+     * @param  array<string, string>  $requires  Key-value pairs of dependency name to user-provided version
      */
     private function releaseSatisfies(PackageRelease $release, array $requires): bool
     {

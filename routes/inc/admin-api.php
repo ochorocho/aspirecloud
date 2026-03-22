@@ -12,13 +12,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin/api/v1')
     ->middleware([
         'auth:sanctum',
-        'permission:' . Permission::UseAdminSite->value,
+        'permission:'.Permission::UseAdminSite->value,
         RequireJson::class,
     ])
     ->group(function (Router $router) {
         $router->post('/import', BulkImport::class)->can(Permission::BulkImport);
         $router->post('/packages/import', BulkPackageImport::class)->can(Permission::BulkImport);
     });
-
 
 // Route::post('/admin/api/v1/import', BulkImport::class)->middleware([RequireJson::class]);

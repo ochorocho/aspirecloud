@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Themes;
@@ -30,7 +31,6 @@ class QueryThemesService
             ->when($req->tags, self::applyTags(...))
             ->when($req->ac_tags, self::applyAcTags(...));
 
-
         $total = $themesBaseQuery->count();
 
         $themes = $themesBaseQuery
@@ -39,11 +39,11 @@ class QueryThemesService
             ->with('author')
             ->get();
 
-        $collection = ThemeResponse::collect($themes)->map(fn($theme) => $theme->withFields($req->fields ?? []));
+        $collection = ThemeResponse::collect($themes)->map(fn ($theme) => $theme->withFields($req->fields ?? []));
 
         return QueryThemesResponse::from(
             themes: $collection,
-            info: ['page' => $page, 'pages' => (int)ceil($total / $perPage), 'results' => $total],
+            info: ['page' => $page, 'pages' => (int) ceil($total / $perPage), 'results' => $total],
         );
     }
 
@@ -88,27 +88,27 @@ class QueryThemesService
     {
         $query->whereHas(
             'author',
-            fn(Builder $q) => $q->whereRaw("user_nicename %> '$author'")->orWhereRaw("display_name %> '$author'"),
+            fn (Builder $q) => $q->whereRaw("user_nicename %> '$author'")->orWhereRaw("display_name %> '$author'"),
         );
     }
 
     /**
-     * @param Builder<Theme> $query
-     * @param string[] $tags
+     * @param  Builder<Theme>  $query
+     * @param  string[]  $tags
      */
     private static function applyTags(Builder $query, array $tags): void
     {
-        $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+        $query->whereHas('tags', fn (Builder $q) => $q->whereIn('slug', $tags));
     }
 
     /**
-     * @param Builder<Theme> $query
-     * @param string[]       $ac_tags
+     * @param  Builder<Theme>  $query
+     * @param  string[]  $ac_tags
      */
     private static function applyAcTags(Builder $query, array $ac_tags): void
     {
         foreach ($ac_tags as $tag) {
-            $query->whereHas('tags', fn(Builder $q) => $q->where('slug', $tag));
+            $query->whereHas('tags', fn (Builder $q) => $q->where('slug', $tag));
         }
     }
 
@@ -119,6 +119,7 @@ class QueryThemesService
         }
         $search = trim($search);
         $search = Regex::replace('/\s+/i', ' ', $search);
+
         return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
     }
 }

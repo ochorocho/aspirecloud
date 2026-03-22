@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers;
@@ -19,7 +20,7 @@ class PassThroughController extends Controller
 
     public function __invoke(Request $request): Response
     {
-        if (app()->environment('testing') && !self::$expectsHit) {
+        if (app()->environment('testing') && ! self::$expectsHit) {
             throw new \RuntimeException('Unexpected request to pass-through controller in testing environment');
         }
 
@@ -38,6 +39,7 @@ class PassThroughController extends Controller
 
         $content = $response->body();
         $this->logRequestAndResponse($request, $response, $content);
+
         return response($content, $response->status(), $response->headers());
     }
 
@@ -46,16 +48,16 @@ class PassThroughController extends Controller
     {
         $headers = $request->headers->all();
 
-        $filter = fn($value, $key) => match (true) {
+        $filter = fn ($value, $key) => match (true) {
             $key === 'host', $key === 'content-length' => false,
             str_starts_with($key, 'x-') => false,
             default => true,
         };
 
-        $mapWpHeader = fn(string $key) => str_starts_with($key, 'wp-') ? str_replace('-', '_', $key) : $key;
+        $mapWpHeader = fn (string $key) => str_starts_with($key, 'wp-') ? str_replace('-', '_', $key) : $key;
 
         /** @param list<string> $value */
-        $mapHeaders = fn(array $value, string $key) => [$mapWpHeader($key) => $value[0]];
+        $mapHeaders = fn (array $value, string $key) => [$mapWpHeader($key) => $value[0]];
 
         return collect($headers)->filter($filter)->mapWithKeys($mapHeaders)->toArray();
     }

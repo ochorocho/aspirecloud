@@ -1,16 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
 use App\Models\Traits\Indexable;
-use App\Observers\ElasticSearchObserver;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -46,7 +45,6 @@ use InvalidArgumentException;
  * @property-read string|null $support_url
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
- *
  * @property-read string $ac_origin
  * @property-read CarbonImmutable $ac_created
  * @property-read array<string, mixed> $ac_raw_metadata
@@ -67,12 +65,12 @@ use InvalidArgumentException;
  */
 final class Plugin extends BaseModel
 {
-    //region Definition
-
-    use HasUuids;
-
     /** @use HasFactory<PluginFactory> */
     use HasFactory;
+
+    // region Definition
+
+    use HasUuids;
 
     use Indexable;
 
@@ -120,9 +118,9 @@ final class Plugin extends BaseModel
         return $this->belongsToMany(PluginTag::class, 'plugin_plugin_tags', 'plugin_id', 'plugin_tag_id', 'id', 'id');
     }
 
-    //endregion
+    // endregion
 
-    //region Constructors
+    // region Constructors
 
     /** @param array<string,mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self
@@ -175,7 +173,7 @@ final class Plugin extends BaseModel
 
     private static function rewriteDotOrgUrl(mixed $url): string
     {
-        if (!is_string($url)) {
+        if (! is_string($url)) {
             // TODO: tighten up types
             return '';
         }
@@ -193,7 +191,8 @@ final class Plugin extends BaseModel
             $slug = $matches[1];
             $file = $matches[2];
             $revision = $matches[3] ?? 'head';
-            return $base . "assets/plugin/$slug/$revision/$file";
+
+            return $base."assets/plugin/$slug/$revision/$file";
         }
 
         // https://s.w.org/plugins/geopattern-icon/addi-simple-slider_c8bcb2.svg
@@ -205,15 +204,16 @@ final class Plugin extends BaseModel
             $file = $matches[1];
             $slug = $matches[2];
             $revision = $matches[3] ?? 'head';
-            return $base . "gp-icon/plugin/$slug/$revision/$file";
+
+            return $base."gp-icon/plugin/$slug/$revision/$file";
         }
 
         return $url;
     }
 
-    //endregion
+    // endregion
 
-    //region Relationships
+    // region Relationships
 
     /** @return BelongsToMany<Author, $this> */
     public function contributors(): BelongsToMany
@@ -221,14 +221,15 @@ final class Plugin extends BaseModel
         return $this->belongsToMany(Author::class, 'plugin_authors', 'plugin_id', 'author_id', 'id', 'id');
     }
 
-    //endregion
+    // endregion
 
-    //region Getters
+    // region Getters
 
     /** @return array<string,mixed> */
     public function getBanners(): array
     {
         $banners = $this->getMetadataArray('banners');
+
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
     }
 
@@ -241,7 +242,7 @@ final class Plugin extends BaseModel
     public function getDownloadLink(): string
     {
         $orig_link = $this->attributes['download_link'] ?? '';
-        if (!$this->shouldRewriteMetadata()) {
+        if (! $this->shouldRewriteMetadata()) {
             return $orig_link;
         }
 
@@ -260,6 +261,7 @@ final class Plugin extends BaseModel
     public function getIcons(): array
     {
         $icons = $this->getMetadataArray('icons');
+
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
     }
 
@@ -279,7 +281,8 @@ final class Plugin extends BaseModel
     public function getScreenshots(): array
     {
         $screenshots = $this->getMetadataArray('screenshots');
-        $rewrite = fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')];
+        $rewrite = fn (array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')];
+
         return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
     }
 
@@ -305,10 +308,11 @@ final class Plugin extends BaseModel
     public function getVersions(): array
     {
         $versions = $this->getMetadataArray('versions');
+
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
 
-    /// private api
+    // / private api
 
     /** @return array<array-key,mixed> */
     private function getMetadataArray(string $field): array
@@ -321,9 +325,9 @@ final class Plugin extends BaseModel
         return $this->ac_origin === 'wp_org';
     }
 
-    //endregion
+    // endregion
 
-    //region Attributes
+    // region Attributes
 
     // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed or even having their
     // construction delegated to a trait.  This is about as refactored as they are going to get.
@@ -397,16 +401,16 @@ final class Plugin extends BaseModel
         return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
     }
 
-    /// private api
+    // / private api
 
     private static function _readonly(): never
     {
         throw new InvalidArgumentException('Cannot modify read-only attribute');
     }
 
-    //endregion
+    // endregion
 
-    //region Collection Management
+    // region Collection Management
 
     /** @param array<array-key, string> $tags */
     public function addTags(array $tags): self
@@ -419,6 +423,7 @@ final class Plugin extends BaseModel
             $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
         }
         $this->tags()->saveMany($pluginTags);
+
         return $this;
     }
 
@@ -452,8 +457,9 @@ final class Plugin extends BaseModel
             );
         }
         $this->contributors()->saveMany($authors);
+
         return $this;
     }
 
-    //endregion
+    // endregion
 }

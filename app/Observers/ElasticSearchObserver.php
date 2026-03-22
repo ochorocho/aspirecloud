@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Observers;
@@ -8,9 +9,7 @@ use App\Services\Elastic\IndexService;
 
 readonly class ElasticSearchObserver
 {
-
     public function __construct(private IndexService $index) {}
-
 
     public function created(Plugin $plugin): void
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\Packages;
@@ -7,20 +8,20 @@ use App\Enums\Origin;
 use App\Enums\PackageType;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
+use App\Services\Packages\PackageDIDService;
 use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use App\Services\Packages\PackageDIDService;
 
 readonly class PackageData extends DTO
 {
     /**
-     * @param array<string, mixed> $raw_metadata
-     * @param array<array<string, string>> $authors
-     * @param array<array<string, string>> $security
-     * @param array<array<string, mixed>> $releases
-     * @param array<string> $tags
-     * @param array<string, mixed> $sections
+     * @param  array<string, mixed>  $raw_metadata
+     * @param  array<array<string, string>>  $authors
+     * @param  array<array<string, string>>  $security
+     * @param  array<array<string, mixed>>  $releases
+     * @param  array<string>  $tags
+     * @param  array<string, mixed>  $sections
      */
     public function __construct(
         public string $did,
@@ -43,7 +44,6 @@ readonly class PackageData extends DTO
     /**
      * Transforms FairMetadata to a package data array.
      *
-     * @param FairMetadata $fairMetadata
      * @return array<string, mixed>
      */
     #[Transforms(FairMetadata::class)]
@@ -55,13 +55,13 @@ readonly class PackageData extends DTO
         $downloadUrl = $release['artifacts']['package'][0]['url'];
 
         $authors = array_map(
-            fn($author) => ['name' => $author['name'], 'url' => $author['url'] ?? null],
+            fn ($author) => ['name' => $author['name'], 'url' => $author['url'] ?? null],
             $fairMetadata->authors,
         );
 
         $security = is_array($fairMetadata->security)
             ? array_map(
-                fn($item) => array_filter($item, fn($value) => $value !== null),
+                fn ($item) => array_filter($item, fn ($value) => $value !== null),
                 $fairMetadata->security,
             )
             : [];
@@ -93,7 +93,6 @@ readonly class PackageData extends DTO
     }
 
     /**
-     * @param Plugin $plugin
      * @return array<string, mixed>
      */
     #[Transforms(Plugin::class)]
@@ -163,7 +162,6 @@ readonly class PackageData extends DTO
     }
 
     /**
-     * @param Theme $theme
      * @return array<string, mixed>
      */
     #[Transforms(Theme::class)]
@@ -233,7 +231,7 @@ readonly class PackageData extends DTO
             'description' => ['nullable', 'string'],
             'download_url' => ['required', 'string'],
             'version' => ['required', 'string'],
-            'origin' => ['required', 'string', 'in:' . implode(',', Origin::values())],
+            'origin' => ['required', 'string', 'in:'.implode(',', Origin::values())],
             'raw_metadata' => ['required', 'array'],
             // 'security' => ['required', 'array'], // [chuck 2025-10-29] disabled entirely
             'releases' => ['required', 'array'],

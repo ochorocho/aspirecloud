@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
@@ -20,9 +21,9 @@ use Illuminate\Support\Collection;
 readonly class PluginUpdateCheckRequest extends DTO
 {
     /**
-     * @param Collection<string, PluginUpdateRequestItem> $plugins
-     * @param array<string, array<string, TranslationMetadata>> $translations
-     * @param list<string> $locale
+     * @param  Collection<string, PluginUpdateRequestItem>  $plugins
+     * @param  array<string, array<string, TranslationMetadata>>  $translations
+     * @param  list<string>  $locale
      */
     public function __construct(
         public Collection $plugins,
@@ -35,7 +36,8 @@ readonly class PluginUpdateCheckRequest extends DTO
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $decode = fn($key) => JSON::tryToAssoc($request->post($key) ?? '[]') ?? [];
+        $decode = fn ($key) => JSON::tryToAssoc($request->post($key) ?? '[]') ?? [];
+
         return [
             'plugins' => PluginUpdateRequestItem::collect($decode('plugins')['plugins']),
             'locale' => $decode('locale'),

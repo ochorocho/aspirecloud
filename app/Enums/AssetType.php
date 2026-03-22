@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Enums;
@@ -30,11 +31,11 @@ enum AssetType: string
             self::THEME => 'https://downloads.wordpress.org/theme/',
             self::PLUGIN_SCREENSHOT,
             self::PLUGIN_BANNER => "https://ps.w.org/$slug/assets/",
-            self::PLUGIN_GP_ICON => "https://s.w.org/plugins/geopattern-icon/",
+            self::PLUGIN_GP_ICON => 'https://s.w.org/plugins/geopattern-icon/',
             self::THEME_SCREENSHOT => "https://ts.w.org/wp-content/themes/$slug/",
         };
 
-        $url = $baseUrl . $file;
+        $url = $baseUrl.$file;
 
         if ($revision && $this->isImage()) {
             $url .= "?rev={$revision}";

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Export;
 
 use App\Values\DTO;
+use Bag\Attributes\Laravel\FromRouteParameter;
+use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Validation\In;
 use Bag\Attributes\Validation\Regex;
-use Bag\Attributes\StripExtraParameters;
-use Bag\Attributes\Laravel\FromRouteParameter;
 
 #[StripExtraParameters]
 readonly class ExportRequest extends DTO

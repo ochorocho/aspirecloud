@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories\WpOrg;
@@ -76,9 +77,6 @@ class ThemeFactory extends Factory
 
     /**
      * Generate the raw metadata array.
-     *
-     * @param array $attributes
-     * @return array
      */
     private function setRawMetadata(array $attributes): array
     {

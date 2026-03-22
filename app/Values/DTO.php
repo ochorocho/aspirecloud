@@ -25,10 +25,10 @@ abstract readonly class DTO extends Bag
     /**
      * I'm convinced the type of iterable<int,mixed> in Bag's WithCollections::collect is a bug, so this overrides it
      *
-     * @param iterable<array-key,mixed> $values (widened from parent's iterable<int,mixed>)
+     * @param  iterable<array-key,mixed>  $values  (widened from parent's iterable<int,mixed>)
      * @return BagCollection<array-key,static>
-     * @todo see if this is still the case in latest release of dshafik/bag and report it as a bug if so
      *
+     * @todo see if this is still the case in latest release of dshafik/bag and report it as a bug if so
      */
     #[Override]
     public static function collect(iterable $values = []): BagCollection

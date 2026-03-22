@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories;
@@ -6,7 +7,6 @@ namespace Database\Factories;
 use App\Models\Package;
 use App\Models\PackageTag;
 use App\Models\WpOrg\Author;
-use Database\Factories\PackageReleaseFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -17,7 +17,7 @@ class PackageFactory extends Factory
 
     public function definition(): array
     {
-        $did = 'fake:' . $this->faker->slug();
+        $did = 'fake:'.$this->faker->slug();
         $name = $this->faker->words(3, true);
         $slug = Str::slug($name);
         $type = $this->faker->randomElement(['wp-plugin', 'wp-theme', 'wp-core', 'typo3-core', 'typo3-extension']);

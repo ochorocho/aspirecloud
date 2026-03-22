@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Models\WpOrg\Author as AuthorModel;
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
 use App\Values\DTO;
@@ -11,45 +12,44 @@ use App\Values\WpOrg\Author;
 use Bag\Attributes\Transforms;
 use Bag\Values\Optional;
 use DateTimeInterface;
-use App\Models\WpOrg\Author as AuthorModel;
 
 readonly class PluginResponse extends DTO
 {
     public const LAST_UPDATED_DATE_FORMAT = 'Y-m-d h:ia T'; // .org's goofy format: "2024-09-27 9:53pm GMT"
 
     /**
-     * @param array<array-key, mixed> $banners
-     * @param array<array-key, array{src: string, caption: string}> $screenshots
-     * @param array<string, Author> $contributors
-     * @param array<string, string> $versions
-     * @param array<string, string> $sections
-     * @param array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
-     * @param list<string> $requires_plugins
-     * @param array<string, string> $icons
-     * @param array<string, string> $upgrade_notice
-     * @param array<string, string> $tags
+     * @param  array<array-key, mixed>  $banners
+     * @param  array<array-key, array{src: string, caption: string}>  $screenshots
+     * @param  array<string, Author>  $contributors
+     * @param  array<string, string>  $versions
+     * @param  array<string, string>  $sections
+     * @param  array{"1":int, "2":int, "3":int, "4":int, "5":int}  $ratings
+     * @param  list<string>  $requires_plugins
+     * @param  array<string, string>  $icons
+     * @param  array<string, string>  $upgrade_notice
+     * @param  array<string, string>  $tags
      */
     public function __construct(
         public string $name,
         public string $slug,
         public string $version,
-        public string|null $requires,
-        public string|null $tested,
-        public string|null $requires_php,
+        public ?string $requires,
+        public ?string $tested,
+        public ?string $requires_php,
         public string $download_link,
         public string $author,
-        public string|null $author_profile,
+        public ?string $author_profile,
         public int $rating,
         public int $num_ratings,
         public array $ratings,
         public int $support_threads,
         public int $support_threads_resolved,
         public int $active_installs,
-        public string|null $last_updated,
-        public string|null $added,
-        public string|null $homepage,
+        public ?string $last_updated,
+        public ?string $added,
+        public ?string $homepage,
         public array $tags,
-        public string|null $donate_link,
+        public ?string $donate_link,
         public array $requires_plugins,
 
         // query_plugins only
@@ -80,7 +80,7 @@ readonly class PluginResponse extends DTO
     #[Transforms(Plugin::class)]
     public static function fromPlugin(Plugin $plugin): array
     {
-        $none = new Optional();
+        $none = new Optional;
 
         assert($plugin->contributors !== null); // mago won't respect the @property-read declaration
 
@@ -118,7 +118,7 @@ readonly class PluginResponse extends DTO
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
             'contributors' => $plugin->contributors->mapWithKeys(
-                fn(AuthorModel $model) => [$model->user_nicename => Author::from($model)],
+                fn (AuthorModel $model) => [$model->user_nicename => Author::from($model)],
             )->toArray(),
             'screenshots' => $plugin->screenshots,
             'support_url' => $plugin->support_url,
@@ -141,6 +141,7 @@ readonly class PluginResponse extends DTO
             return null;
         }
         $out = $lastUpdated->format(self::LAST_UPDATED_DATE_FORMAT);
+
         // Unfortunately this seems to render GMT as "GMT+0000" for some reason, so strip that out
         return Regex::replace('/\+\d+$/', '', $out);
     }

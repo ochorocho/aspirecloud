@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Feature\API\Metrics;
@@ -13,12 +14,12 @@ beforeEach(function () {
 
 function package_information_uri(string $did): string
 {
-    return '/packages/' . $did;
+    return '/packages/'.$did;
 }
 
 function package_did_document_uri(string $packageType, string $slug): string
 {
-    return '/packages/' . $packageType . '/' . $slug . '/did.json';
+    return '/packages/'.$packageType.'/'.$slug.'/did.json';
 }
 
 test('metrics endpoint returns correct data', function () {

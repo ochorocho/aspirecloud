@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\Plugins;
@@ -15,10 +16,9 @@ class PluginInformation_1_2_Controller extends Controller
 {
     public function __construct(
         private readonly PluginServices\PluginInformationService $pluginInformationService,
-        private readonly PluginServices\QueryPluginsService      $queryPluginsService,
-        private readonly PluginServices\PluginHotTagsService     $hotTagsService,
-    )
-    {
+        private readonly PluginServices\QueryPluginsService $queryPluginsService,
+        private readonly PluginServices\PluginHotTagsService $hotTagsService,
+    ) {
         // @mago-expect lint:middleware-in-routes
         config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
     }
@@ -28,28 +28,24 @@ class PluginInformation_1_2_Controller extends Controller
         $action = $request->query('action', '');
 
         $handlers = [
-            'query_plugins' => fn() => $this->queryPlugins(Plugins\QueryPluginsRequest::from($request)),
-            'plugin_information' => fn() => $this->pluginInformation(Plugins\PluginInformationRequest::from($request)),
-            'hot_tags' => fn() => $this->hotTags($request),
-            'popular_tags' => fn() => $this->hotTags($request),
+            'query_plugins' => fn () => $this->queryPlugins(Plugins\QueryPluginsRequest::from($request)),
+            'plugin_information' => fn () => $this->pluginInformation(Plugins\PluginInformationRequest::from($request)),
+            'hot_tags' => fn () => $this->hotTags($request),
+            'popular_tags' => fn () => $this->hotTags($request),
         ];
 
-        if (!isset($handlers[$action])) {
+        if (! isset($handlers[$action])) {
             return response()->json(['error' => 'Invalid action'], 400);
         }
 
         return $handlers[$action]();
     }
 
-    /**
-     * @param Plugins\PluginInformationRequest $req
-     * @return JsonResponse
-     */
     private function pluginInformation(Plugins\PluginInformationRequest $req): JsonResponse
     {
         $plugin = $this->pluginInformationService->findBySlug($req->slug);
 
-        if (!$plugin) {
+        if (! $plugin) {
             return response()->json(['error' => 'Plugin not found'], 404);
         }
 
@@ -64,23 +60,17 @@ class PluginInformation_1_2_Controller extends Controller
         return response()->json($resource, $status);
     }
 
-    /**
-     * @param Plugins\QueryPluginsRequest $request
-     * @return JsonResponse
-     */
     private function queryPlugins(Plugins\QueryPluginsRequest $request): JsonResponse
     {
         $result = $this->queryPluginsService->queryPlugins($request);
+
         return response()->json($result);
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     private function hotTags(Request $request): JsonResponse
     {
-        $tags = $this->hotTagsService->getHotTags((int)$request->query('number', '-1'));
+        $tags = $this->hotTagsService->getHotTags((int) $request->query('number', '-1'));
+
         return response()->json($tags);
     }
 }

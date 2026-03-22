@@ -6,26 +6,26 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
 
 describe('Sync Closed Plugins', function () {
-    $md_0gravatar =  [
-        "slug" => "0gravatar",
-        "name" => "Display Name If No Gravatar",
-        "status" => "closed",
-        "error" => "closed",
-        "description" => "This plugin has been closed as of November 13, 2024 and is not available for download. This closure is permanent. Reason: Author Request.",
-        "closed" => true,
-        "closed_date" => "2024-11-13",
-        "reason" => "author-request",
-        "reason_text" => "Author Request",
-        "aspiresync_meta" => [
-            "id" => "01933d0c-12a4-72a3-a042-52cd65f40126",
-            "type" => "plugin",
-            "slug" => "0gravatar",
-            "name" => "Display Name If No Gravatar",
-            "status" => "closed",
-            "version" => null,
-            "origin" => "wp_org",
-            "updated" => "2024-11-13",
-            "pulled" => "2024-11-18T02:13:41+00:00",
+    $md_0gravatar = [
+        'slug' => '0gravatar',
+        'name' => 'Display Name If No Gravatar',
+        'status' => 'closed',
+        'error' => 'closed',
+        'description' => 'This plugin has been closed as of November 13, 2024 and is not available for download. This closure is permanent. Reason: Author Request.',
+        'closed' => true,
+        'closed_date' => '2024-11-13',
+        'reason' => 'author-request',
+        'reason_text' => 'Author Request',
+        'aspiresync_meta' => [
+            'id' => '01933d0c-12a4-72a3-a042-52cd65f40126',
+            'type' => 'plugin',
+            'slug' => '0gravatar',
+            'name' => 'Display Name If No Gravatar',
+            'status' => 'closed',
+            'version' => null,
+            'origin' => 'wp_org',
+            'updated' => '2024-11-13',
+            'pulled' => '2024-11-18T02:13:41+00:00',
         ],
     ];
 

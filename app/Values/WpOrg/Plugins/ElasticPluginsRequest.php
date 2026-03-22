@@ -13,29 +13,27 @@ use Illuminate\Http\Request;
 readonly class ElasticPluginsRequest extends DTO
 {
     /**
-     * @param string|list<string>|null $tags
-     * @param string|list<string>|null $tagsAnd
-     * @param string|list<string>|null $tagsOr
-     * @param string|list<string>|null $tagsNot
-     * @param string|list<string>|null $fields
+     * @param  string|list<string>|null  $tags
+     * @param  string|list<string>|null  $tagsAnd
+     * @param  string|list<string>|null  $tagsOr
+     * @param  string|list<string>|null  $tagsNot
+     * @param  string|list<string>|null  $fields
      */
     public function __construct(
         public string|array|null $tags = null,
-        public ?string           $tag = null,
+        public ?string $tag = null,
         public string|array|null $tagsAnd = null,
         public string|array|null $tagsOr = null,
         public string|array|null $tagsNot = null,
-        public ?string           $plugin = null,
-        public ?string           $author = null,
-        public ?string           $browse = null,
-        public mixed             $fields = null,
-        public ?int              $page = 1,
-        public ?int              $per_page = 24,
-        public ?int              $offset = null,
-        public ?int              $limit = null,
-    )
-    {
-    }
+        public ?string $plugin = null,
+        public ?string $author = null,
+        public ?string $browse = null,
+        public mixed $fields = null,
+        public ?int $page = 1,
+        public ?int $per_page = 24,
+        public ?int $offset = null,
+        public ?int $limit = null,
+    ) {}
 
     /** @return array<string, mixed> */
     #[Transforms(Request::class)]
@@ -51,8 +49,8 @@ readonly class ElasticPluginsRequest extends DTO
         }
 
         $query['search'] = strtolower(trim($value));
-        $page = max(1, (int)($query['page'] ?? 1));
-        $perPage = max(1, (int)($query['per_page'] ?? 24));
+        $page = max(1, (int) ($query['page'] ?? 1));
+        $perPage = max(1, (int) ($query['per_page'] ?? 24));
         $query['offset'] = ($page - 1) * $perPage;
         $query['limit'] = $perPage;
 
@@ -67,7 +65,7 @@ readonly class ElasticPluginsRequest extends DTO
             }
         }
 
-        if (!empty($query['tag']) && empty($query['tags'])) {
+        if (! empty($query['tag']) && empty($query['tags'])) {
             $query['tags'] = [$query['tag']];
         }
 
@@ -75,7 +73,7 @@ readonly class ElasticPluginsRequest extends DTO
     }
 
     /**
-     * @param string|list<string>|null $input
+     * @param  string|list<string>|null  $input
      * @return list<string>
      */
     public static function normalizeTags(string|array|null $input): array
@@ -89,7 +87,7 @@ readonly class ElasticPluginsRequest extends DTO
         }
 
         return array_values(array_filter(
-            array_map(static fn($tag) => strtolower(trim($tag)), $tags)
+            array_map(static fn ($tag) => strtolower(trim($tag)), $tags)
         ));
     }
 }

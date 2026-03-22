@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main, task/migrate-ti-ddev]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & Style
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Start DDEV
+        run: ddev start
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Check code style
+        run: ddev style
+
+      - name: Run static analysis
+        run: ddev quality
+
+  test:
+    name: Test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Start DDEV
+        run: ddev start
+
+      - name: Initialize project
+        run: ddev init
+
+      - name: Run tests
+        run: ddev test

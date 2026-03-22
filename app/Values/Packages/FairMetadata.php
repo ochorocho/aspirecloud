@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\Packages;
@@ -25,14 +26,14 @@ readonly class FairMetadata extends DTO
     public const string CONTEXT = 'https://fair.pm/ns/metadata/v1';
 
     /**
-     * @param string|array<string> $context
-     * @param array<array<string, mixed>> $authors
-     * @param array<array<string, mixed>> $security
-     * @param array<array<string, mixed>> $releases
-     * @param array<string> $keywords
-     * @param array<string, mixed> $sections
-     * @param array<string> $_links
-     * @param array<string, mixed> $raw_metadata
+     * @param  string|array<string>  $context
+     * @param  array<array<string, mixed>>  $authors
+     * @param  array<array<string, mixed>>  $security
+     * @param  array<array<string, mixed>>  $releases
+     * @param  array<string>  $keywords
+     * @param  array<string, mixed>  $sections
+     * @param  array<string>  $_links
+     * @param  array<string, mixed>  $raw_metadata
      */
     public function __construct(
         // #[MapInputName(Alias::class, '@context')] // currently mapped by hand in fromMetadata()
@@ -57,7 +58,7 @@ readonly class FairMetadata extends DTO
     ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     #[Transforms('array')]
@@ -91,7 +92,6 @@ readonly class FairMetadata extends DTO
     }
 
     /**
-     * @param Package $package
      * @return array<string, mixed>
      */
     #[Transforms(Package::class)]
@@ -99,7 +99,7 @@ readonly class FairMetadata extends DTO
     {
         $releases = $package
             ->releases
-            ->map(fn($release) => [
+            ->map(fn ($release) => [
                 'version' => $release->version,
                 'artifacts' => $release->artifacts,
                 'provides' => $release->provides,
@@ -115,7 +115,7 @@ readonly class FairMetadata extends DTO
             'license' => $package->license,
             'authors' => $package
                 ->authors
-                ->map(fn($author) => array_filter([
+                ->map(fn ($author) => array_filter([
                     'name' => $author->display_name,
                     'url' => $author->author_url,
                     // @todo - maybe store email in Author model, if it exists on the FAIR package
@@ -152,7 +152,7 @@ readonly class FairMetadata extends DTO
                     ? $value[0] === self::CONTEXT
                     : $value === self::CONTEXT,
             'id' => ['required', 'string'],
-            'type' => ['required', 'string', 'in:' . implode(',', PackageType::values())],
+            'type' => ['required', 'string', 'in:'.implode(',', PackageType::values())],
             'license' => ['required', 'string'], // @todo - validate against SPDX licenses?
             'slug' => ['nullable', 'string'],
             'name' => ['nullable', 'string'],

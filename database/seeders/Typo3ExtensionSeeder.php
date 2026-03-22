@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Seeders;
 
 use App\Models\Package;
-use App\Models\PackageRelease;
 use Database\Factories\PackageReleaseFactory;
 use Illuminate\Database\Seeder;
 

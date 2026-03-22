@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\Themes;
@@ -20,8 +21,8 @@ class ThemeUpdatesController extends Controller
         try {
             $req = ThemeUpdateCheckRequest::from($request);
 
-            $isValid = fn($item) => !isset($item['UpdateURI'])
-                || !$item['UpdateURI']
+            $isValid = fn ($item) => ! isset($item['UpdateURI'])
+                || ! $item['UpdateURI']
                 || Regex::match('!(?:https?://)?(?:wordpress\.org|w\.org)/themes?/!', $item['UpdateURI']);
 
             $reqThemes = collect($req->themes)->filter($isValid);
@@ -30,7 +31,7 @@ class ThemeUpdatesController extends Controller
             $themes = Theme::query()
                 ->whereIn('slug', $reqThemes->keys())
                 ->get()
-                ->partition(fn(Theme $theme) => version_compare(
+                ->partition(fn (Theme $theme) => version_compare(
                     $theme->version,
                     $reqThemes[$theme->slug]['Version'] ?? null,
                     '>',
@@ -40,6 +41,7 @@ class ThemeUpdatesController extends Controller
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();
+
             return $this->sendResponse(['error' => $firstErrorMessage], 400);
         }
     }
@@ -47,7 +49,7 @@ class ThemeUpdatesController extends Controller
     /**
      * Send response based on API version.
      *
-     * @param array<string,mixed>|ThemeUpdateCheckResponse $response
+     * @param  array<string,mixed>|ThemeUpdateCheckResponse  $response
      */
     private function sendResponse(
         array|ThemeUpdateCheckResponse $response,
@@ -58,8 +60,10 @@ class ThemeUpdatesController extends Controller
             if ($response instanceof ThemeUpdateCheckResponse) {
                 $response = $response->toArray();
             }
-            return response(serialize((object)$response), $statusCode);
+
+            return response(serialize((object) $response), $statusCode);
         }
+
         return response()->json($response, $statusCode);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Themes;
@@ -43,7 +44,7 @@ trait ThemeFields
     /**
      * Get the fields to be returned in the response.
      *
-     * @param array<string,bool> $defaultFields
+     * @param  array<string,bool>  $defaultFields
      * @return array<string,bool>
      */
     public static function getFields(Request $request, array $defaultFields = []): array
@@ -65,11 +66,11 @@ trait ThemeFields
             // $defaultFields['requires_php'] = true;
         }
         $specifiedFields = $request->query('fields');
-        if (!$specifiedFields) {
+        if (! $specifiedFields) {
             return array_merge(self::additionalFields, $defaultFields);
         }
 
-        if (!is_array($specifiedFields)) {
+        if (! is_array($specifiedFields)) {
             $specifiedFields = explode(',', $specifiedFields);
         }
 
@@ -88,6 +89,7 @@ trait ThemeFields
                         return false;
                     }
                 }
+
                 return $value;
             }, $specifiedFields);
         }

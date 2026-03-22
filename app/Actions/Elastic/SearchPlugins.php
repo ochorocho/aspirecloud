@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Actions\Elastic;
@@ -17,7 +18,6 @@ use Elastic\Elasticsearch\Client;
  *     author?: string|null,
  *     browse?: string|null
  * }
- *
  * @phpstan-type SearchPluginsResult array{
  *     total: int,
  *     limit: int,
@@ -29,11 +29,10 @@ use Elastic\Elasticsearch\Client;
 readonly class SearchPlugins
 {
     /**
-     * @param SearchPluginsRequest $request
+     * @param  SearchPluginsRequest  $request
      */
-    public function __construct(private array  $request)
-    {
-    }
+    public function __construct(private array $request) {}
+
     /**
      * @return SearchPluginsResult
      */
@@ -53,14 +52,14 @@ readonly class SearchPlugins
         $browse = $this->request['browse'] ?? null;
         // query
         if ($query === '') {
-            $mustQuery = ['match_all' => (object)[]];
+            $mustQuery = ['match_all' => (object) []];
         } else {
             $mustQuery = [
                 'bool' => [
                     'should' => [
-                        ['wildcard' => ['name' => '*' . strtolower($query) . '*']],
-                        ['wildcard' => ['slug' => '*' . strtolower($query) . '*']],
-                        ['wildcard' => ['description' => '*' . strtolower($query) . '*']],
+                        ['wildcard' => ['name' => '*'.strtolower($query).'*']],
+                        ['wildcard' => ['slug' => '*'.strtolower($query).'*']],
+                        ['wildcard' => ['description' => '*'.strtolower($query).'*']],
                     ],
                     'minimum_should_match' => 1,
                 ],
@@ -130,7 +129,7 @@ readonly class SearchPlugins
 
         $hits = $response['hits']['hits'] ?? [];
         $total = $response['hits']['total']['value'] ?? 0;
-        $results = array_map(fn($hit) => $hit['_source'], $hits);
+        $results = array_map(fn ($hit) => $hit['_source'], $hits);
 
         return [
             'total' => $total,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\WpOrg;
@@ -17,7 +18,6 @@ use InvalidArgumentException;
 
 /**
  * @property-read Author|null $author
- *
  * @property-read string $id
  * @property-read string $slug
  * @property-read string $name
@@ -40,7 +40,6 @@ use InvalidArgumentException;
  * @property-read string|null $reviews_url
  * @property-read string|null $external_support_url
  * @property-read string|null $external_repository_url
- *
  * @property-read string $ac_origin
  * @property-read CarbonImmutable $ac_created
  * @property-read array<string, mixed> $ac_raw_metadata
@@ -52,12 +51,12 @@ use InvalidArgumentException;
  */
 final class Theme extends BaseModel
 {
-    //region Definition
-
-    use HasUuids;
-
     /** @use HasFactory<ThemeFactory> */
     use HasFactory;
+
+    // region Definition
+
+    use HasUuids;
 
     protected $table = 'themes';
 
@@ -102,13 +101,14 @@ final class Theme extends BaseModel
         return $this->belongsTo(Author::class);
     }
 
-    //endregion
+    // endregion
 
-    //region Constructors
+    // region Constructors
 
     /**
      * TODO: move to WpOrgThemeRepo
-     * @param array<string,mixed> $metadata
+     *
+     * @param  array<string,mixed>  $metadata
      */
     public static function fromSyncMetadata(array $metadata): self
     {
@@ -124,7 +124,7 @@ final class Theme extends BaseModel
             'author_id' => $author->id,
             'slug' => $metadata['slug'],
             'name' => $metadata['name'],
-            'description' => ($metadata['sections']['description'] ?? null) ?: "", // XXX should probably be nullable
+            'description' => ($metadata['sections']['description'] ?? null) ?: '', // XXX should probably be nullable
             'version' => $metadata['version'],
             'download_link' => $metadata['download_link'],
             'requires' => ($metadata['requires'] ?? null) ?: null,
@@ -150,17 +150,18 @@ final class Theme extends BaseModel
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
             $instance->addTags($metadata['tags']);
         }
+
         return $instance->refresh();
     }
 
-    //endregion
+    // endregion
 
-    //region Getters
+    // region Getters
 
     public function getDownloadLink(): string
     {
         $orig_link = $this->attributes['download_link'] ?? '';
-        if (!$this->shouldRewriteMetadata()) {
+        if (! $this->shouldRewriteMetadata()) {
             return $orig_link;
         }
 
@@ -178,7 +179,7 @@ final class Theme extends BaseModel
     public function getScreenshotUrl(): string
     {
         $url = $this->attributes['screenshot_url'] ?? '';
-        if (!$this->shouldRewriteMetadata()) {
+        if (! $this->shouldRewriteMetadata()) {
             return $url;
         }
 
@@ -187,13 +188,14 @@ final class Theme extends BaseModel
 
         $base = config('app.aspirecloud.download.base');
         $matches = Regex::match('#^.*?/themes/(.*?)/(.*?)(?:\?ver=(.*))?$#i', $url);
-        if (!$matches) {
+        if (! $matches) {
             return $url;
         }
         $slug = $matches[1];
         $file = $matches[2];
         $revision = $matches[3] ?? 'head';
-        return $base . "assets/theme/$slug/$revision/$file";
+
+        return $base."assets/theme/$slug/$revision/$file";
     }
 
     /** @return array{"1":int, "2":int, "3":int, "4":int, "5":int} */
@@ -212,10 +214,11 @@ final class Theme extends BaseModel
     public function getVersions(): array
     {
         $versions = $this->getMetadataArray('versions');
+
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
 
-    /// private api
+    // / private api
 
     /** @return array<array-key, mixed> */
     private function getMetadataArray(string $field): array
@@ -231,12 +234,13 @@ final class Theme extends BaseModel
     private static function rewriteDotOrgUrl(string $url): string
     {
         $base = config('app.aspirecloud.download.base');
+
         return \Safe\preg_replace('#https?://.*?/#i', $base, $url); // TODO make this check for a .org url
     }
 
-    //endregion
+    // endregion
 
-    //region Attributes
+    // region Attributes
 
     // TODO: tighten up getter types in generics
 
@@ -271,16 +275,16 @@ final class Theme extends BaseModel
         return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
     }
 
-    /// private api
+    // / private api
 
     private static function _readonly(): never
     {
         throw new InvalidArgumentException('Cannot modify read-only attribute');
     }
 
-    //endregion
+    // endregion
 
-    //region Collection Management
+    // region Collection Management
 
     /** @param array<array-key, string> $tags */
     public function addTags(array $tags): self
@@ -293,6 +297,7 @@ final class Theme extends BaseModel
             $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
         }
         $this->tags()->saveMany($themeTags);
+
         return $this;
     }
 
@@ -308,5 +313,5 @@ final class Theme extends BaseModel
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
     }
 
-    //endregion
+    // endregion
 }

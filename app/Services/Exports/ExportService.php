@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Exports;
 
-use Closure;
-use App\Models\WpOrg\Theme;
-use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\ClosedPlugin;
+use App\Models\WpOrg\Plugin;
+use App\Models\WpOrg\Theme;
 use App\Values\WpOrg\Export\ExportRequest;
-use Illuminate\Support\Facades\Storage;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class ExportService
 {
@@ -18,9 +19,6 @@ class ExportService
     /**
      * Export specific packages (plugins, themes, closed plugins) to S3
      * and return a streamed response.
-     *
-     * @param ExportRequest $req
-     * @return string
      */
     public function getExportedFilePath(ExportRequest $req): string
     {
@@ -34,25 +32,20 @@ class ExportService
 
     /**
      * Get the S3 path for the export based on the request parameters.
-     *
-     * @param ExportRequest $req
-     * @return string
      */
     private function getS3Path(ExportRequest $req): string
     {
         $type = $req->type;
         $after = $req->after;
 
-        $basePath = 'exports/' . $type;
-        $filename = $type . '-' . ($after ? $after : 'full') . '.ndjson';
-        return $basePath . '/' . $filename;
+        $basePath = 'exports/'.$type;
+        $filename = $type.'-'.($after ? $after : 'full').'.ndjson';
+
+        return $basePath.'/'.$filename;
     }
 
     /**
      * Get the query builder for the specified export type.
-     *
-     * @param ExportRequest $req
-     * @return Builder
      */
     private function getQueryBuilder(ExportRequest $req): Builder
     {
@@ -77,8 +70,6 @@ class ExportService
 
     /**
      * Get the transformer for the exported model.
-     *
-     * @return Closure
      */
     private function getTransformer(): Closure
     {
@@ -92,10 +83,6 @@ class ExportService
 
     /**
      * Export the data to S3.
-     *
-     * @param ExportRequest $req
-     * @param string $path
-     * @return void
      */
     public function exportToS3(ExportRequest $req, string $path): void
     {
@@ -105,7 +92,7 @@ class ExportService
         $stream = \Safe\fopen('php://temp', 'rw+');
 
         $queryBuilder->lazy($this->chunkSize)->each(function ($item) use ($stream, $transformer) {
-            $line = \Safe\json_encode($transformer($item)) . "\n";
+            $line = \Safe\json_encode($transformer($item))."\n";
             \Safe\fwrite($stream, $line);
         });
 

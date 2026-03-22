@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Elastic;
@@ -8,7 +9,6 @@ use Elastic\Elasticsearch\Client;
 
 readonly class IndexService
 {
-
     public function __construct(private Client $client) {}
 
     public function add(Plugin $plugin): void
@@ -16,7 +16,7 @@ readonly class IndexService
         /** @noinspection PhpParamsInspection (phpstorm is confused by Client::index phpdoc) */
         $this->client->index([
             'index' => 'plugins',
-            'id' => (string)$plugin->getKey(),
+            'id' => (string) $plugin->getKey(),
             'body' => $this->toDocumentArray($plugin),
         ]);
     }
@@ -25,7 +25,7 @@ readonly class IndexService
     {
         $this->client->delete([
             'index' => 'plugins',
-            'id' => (string)$plugin->getKey(),
+            'id' => (string) $plugin->getKey(),
         ]);
     }
 
@@ -54,8 +54,8 @@ readonly class IndexService
             'description' => $plugin->description,
             'short_description' => $plugin->short_description,
             'author' => $plugin->author,
-            'contributors' => $plugin->contributors->pluck('display_name')->map(fn($n) => strtolower($n))->all() ?? [],
-            'tags' => $plugin->tags->pluck('name')->map(fn($t) => strtolower($t))->all() ?? [],
+            'contributors' => $plugin->contributors->pluck('display_name')->map(fn ($n) => strtolower($n))->all() ?? [],
+            'tags' => $plugin->tags->pluck('name')->map(fn ($t) => strtolower($t))->all() ?? [],
             'rating' => $plugin->rating,
             'active_installs' => $plugin->active_installs,
             'last_updated' => optional($plugin->last_updated)?->toDateString(),

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -36,10 +37,10 @@ use Illuminate\Support\Str;
  */
 class Package extends BaseModel
 {
-    use HasUuids;
-
     /** @use HasFactory<PackageFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     protected $table = 'packages';
 
@@ -91,10 +92,6 @@ class Package extends BaseModel
         return $this->belongsToMany(PackageTag::class, 'package_package_tag', 'package_id', 'package_tag_id');
     }
 
-    /**
-     * @param PackageData $packageData
-     * @return self
-     */
     public static function fromPackageData(PackageData $packageData): self
     {
         return DB::transaction(function () use ($packageData) {
@@ -159,15 +156,13 @@ class Package extends BaseModel
     }
 
     /**
-     * @param Package $package
-     * @param array<string> $keywords
-     * @return void
+     * @param  array<string>  $keywords
      */
     protected static function syncTags(self $package, array $keywords): void
     {
         foreach ($keywords as $keyword) {
             // @mago-expect analysis:redundant-type-comparison
-            if (!is_string($keyword) || $keyword === '') {
+            if (! is_string($keyword) || $keyword === '') {
                 continue;
             }
             $package
@@ -180,9 +175,7 @@ class Package extends BaseModel
     }
 
     /**
-     * @param Package $package
-     * @param array<array<string, string>> $authors
-     * @return void
+     * @param  array<array<string, string>>  $authors
      */
     protected static function syncAuthors(self $package, array $authors): void
     {
@@ -211,10 +204,11 @@ class Package extends BaseModel
     public function _getRawMetadata(): array
     {
         $metadata = $this->raw_metadata;
-        if (!is_array($metadata) || !($metadata['@context'] ?? null)) {
+        if (! is_array($metadata) || ! ($metadata['@context'] ?? null)) {
             // XXX HACK: metadata not provided, so use the model's representation instead
             return FairMetadata::from($this)->toArray();
         }
+
         return $metadata;
     }
 }

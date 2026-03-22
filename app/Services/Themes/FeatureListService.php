@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Themes;
@@ -7,6 +8,7 @@ class FeatureListService
 {
     /**
      * @return array<string, array<string,string>>
+     *
      * @mago-expect analysis:invalid-array-element-key (Laravel's __ function is hopeless)
      */
     public function getFeatureList(?string $wpVersion = null): array
@@ -84,13 +86,13 @@ class FeatureListService
             }
         }
 
-        if (!isset($wpVersion) || version_compare($wpVersion, '3.9-beta', '>')) {
+        if (! isset($wpVersion) || version_compare($wpVersion, '3.9-beta', '>')) {
             $tags[__('Layout')] = array_merge($tags[__('Layout')], $tags[__('Columns')]);
             unset($tags[__('Columns')]);
         }
 
         // See https://core.trac.wordpress.org/ticket/33407.
-        if (!isset($wpVersion) || version_compare($wpVersion, '4.6-alpha', '>')) {
+        if (! isset($wpVersion) || version_compare($wpVersion, '4.6-alpha', '>')) {
             unset($tags[__('Colors')]);
             $tags[__('Layout')] = [
                 'grid-layout' => __('Grid Layout'),
@@ -121,27 +123,27 @@ class FeatureListService
         }
 
         // See https://core.trac.wordpress.org/ticket/46272.
-        if (!isset($wpVersion) || version_compare($wpVersion, '5.2-alpha', '>=')) {
+        if (! isset($wpVersion) || version_compare($wpVersion, '5.2-alpha', '>=')) {
             $tags[__('Layout')]['wide-blocks'] = __('Wide Blocks');
             $tags[__('Features')]['block-styles'] = __('Block Editor Styles');
             asort($tags[__('Features')]); // To move block-styles to the right place.
         }
 
         // See https://core.trac.wordpress.org/ticket/50164.
-        if (!isset($wpVersion) || version_compare($wpVersion, '5.5-alpha', '>=')) {
+        if (! isset($wpVersion) || version_compare($wpVersion, '5.5-alpha', '>=')) {
             $tags[__('Features')]['block-patterns'] = __('Block Editor Patterns');
             $tags[__('Features')]['full-site-editing'] = __('Full Site Editing');
             asort($tags[__('Features')]);
         }
 
         // See https://core.trac.wordpress.org/ticket/53556.
-        if (!isset($wpVersion) || version_compare($wpVersion, '5.8.1-alpha', '>=')) {
+        if (! isset($wpVersion) || version_compare($wpVersion, '5.8.1-alpha', '>=')) {
             $tags[__('Features')]['template-editing'] = __('Template Editing');
             asort($tags[__('Features')]);
         }
 
         // See https://core.trac.wordpress.org/ticket/56869.
-        if (!isset($wpVersion) || version_compare($wpVersion, '6.0-alpha', '>=')) {
+        if (! isset($wpVersion) || version_compare($wpVersion, '6.0-alpha', '>=')) {
             $tags[__('Features')]['style-variations'] = __('Style Variations');
             asort($tags[__('Features')]);
         }

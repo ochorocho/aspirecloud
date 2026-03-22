@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\Themes;
@@ -20,8 +21,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
-use function Safe\preg_match;
-
 class ThemeController extends Controller
 {
     public function __construct(
@@ -29,15 +28,14 @@ class ThemeController extends Controller
         private readonly ThemeInformationService $themeInfo,
         private readonly ThemeHotTagsService $hotTags,
         private readonly FeatureListService $featureList,
-    )
-    {
+    ) {
         // @mago-expect lint:middleware-in-routes
         config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
     }
 
     public function info(Request $request): JsonResponse|Response
     {
-        $action = (string)$request->query('action'); // @mago-expect analysis:array-to-string-conversion
+        $action = (string) $request->query('action'); // @mago-expect analysis:array-to-string-conversion
         try {
             return match ($action) {
                 'query_themes' => $this->doQueryThemes($request),
@@ -49,6 +47,7 @@ class ThemeController extends Controller
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();
+
             return $this->sendResponse(['error' => $firstErrorMessage], 400);
         } catch (NotFoundException $e) {
             return $this->sendResponse(['error' => $e->getMessage()], 404);
@@ -59,6 +58,7 @@ class ThemeController extends Controller
     {
         $req = QueryThemesRequest::from($request);
         $themes = $this->queryThemes->queryThemes($req);
+
         return $this->sendResponse($themes);
     }
 
@@ -67,12 +67,14 @@ class ThemeController extends Controller
         // NOTE: upstream requires slug query parameter to be request[slug], just slug is not recognized
         $req = ThemeInformationRequest::fromRequest($request);
         $response = $this->themeInfo->info($req);
+
         return $this->sendResponse($response);
     }
 
     private function doHotTags(Request $request): JsonResponse|Response
     {
         $tags = $this->hotTags->getHotTags((int) $request->query('number', '-1'));
+
         return $this->sendResponse($tags);
     }
 
@@ -80,6 +82,7 @@ class ThemeController extends Controller
     {
         $wpVersion = $this->getWpVersion($request);
         $tags = $this->featureList->getFeatureList($wpVersion);
+
         return $this->sendResponse($tags);
     }
 
@@ -94,7 +97,7 @@ class ThemeController extends Controller
     /**
      * Send response based on API version.
      *
-     * @param array<string,mixed>|QueryThemesResponse|ThemeResponse $response
+     * @param  array<string,mixed>|QueryThemesResponse|ThemeResponse  $response
      */
     private function sendResponse(
         array|QueryThemesResponse|ThemeResponse $response,
@@ -104,6 +107,7 @@ class ThemeController extends Controller
         if ($version === '1.0') {
             return response(serialize((object) $response), $statusCode);
         }
+
         return response()->json($response, $statusCode);
     }
 
@@ -116,6 +120,7 @@ class ThemeController extends Controller
             // Get version from user agent since it's not explicitly sent to feature_list requests in older API branches.
             return $matches[1];
         }
+
         return null;
     }
 }

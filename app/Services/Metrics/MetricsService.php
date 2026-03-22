@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Metrics;
@@ -13,11 +14,6 @@ class MetricsService implements Metrics
         private Repository $cache,
     ) {}
 
-    /**
-     * @param string $key
-     * @param int $by
-     * @return void
-     */
     public function increment(string $key, int $by = 1): void
     {
         // cache
@@ -38,10 +34,6 @@ class MetricsService implements Metrics
         }
     }
 
-    /**
-     * @param string $key
-     * @return int
-     */
     public function get(string $key): int
     {
         // cache

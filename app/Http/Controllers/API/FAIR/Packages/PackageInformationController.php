@@ -1,15 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\FAIR\Packages;
 
+use App\Http\Controllers\Controller;
+use App\Services\Packages\PackageInformationService;
 use App\Values\DID\Document;
+use App\Values\Packages\PackageInformationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Values\Packages\PackageInformationRequest;
-use App\Services\Packages\PackageInformationService;
 
 class PackageInformationController extends Controller
 {
@@ -17,10 +17,6 @@ class PackageInformationController extends Controller
         private PackageInformationService $packageInfo,
     ) {}
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function didDocument(Request $request): Response
     {
         $type = $request->route('type');
@@ -28,14 +24,14 @@ class PackageInformationController extends Controller
 
         $package = $this->packageInfo->find($type, $slug);
 
-        if (!$package) {
+        if (! $package) {
             abort(404, 'Package not found');
         }
 
         $didDocument = $this->generateDidDocument($package->did);
 
         return response(
-            \Safe\json_encode($didDocument->toArray(), JSON_UNESCAPED_SLASHES) . "\n",
+            \Safe\json_encode($didDocument->toArray(), JSON_UNESCAPED_SLASHES)."\n",
             200,
             [
                 'Content-Type' => 'application/did+ld+json',
@@ -44,7 +40,6 @@ class PackageInformationController extends Controller
     }
 
     /**
-     * @param string $did
      * @return array<string, mixed>
      */
     public function fairMetadata(string $did): array
@@ -57,7 +52,7 @@ class PackageInformationController extends Controller
     {
         $package = $this->packageInfo->findByDID($req->did);
 
-        if (!$package) {
+        if (! $package) {
             abort(404, 'Package not found');
         }
 
@@ -65,10 +60,6 @@ class PackageInformationController extends Controller
         // return FairMetadata::from($package);
     }
 
-    /**
-     * @param string $did
-     * @return Document
-     */
     private function generateDidDocument(string $did): Document
     {
         return Document::from([
@@ -77,8 +68,8 @@ class PackageInformationController extends Controller
             'id' => $did,
             'service' => [
                 [
-                    'id'              => '#fairpm_repo',
-                    'type'            => 'FairPackageManagementRepo',
+                    'id' => '#fairpm_repo',
+                    'type' => 'FairPackageManagementRepo',
                     'serviceEndpoint' => $this->packageInfo->getPackageMetadataUrl($did),
                 ],
             ],

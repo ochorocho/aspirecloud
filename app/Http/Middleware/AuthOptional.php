@@ -17,6 +17,7 @@ class AuthOptional
             $user = auth($gate)->user() or throw new UnauthorizedHttpException('Invalid authentication token');
             auth($gate)->setUser($user);
         }
+
         return $next($request);
     }
 }

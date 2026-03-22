@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Package;
 use App\Models\PackageTag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

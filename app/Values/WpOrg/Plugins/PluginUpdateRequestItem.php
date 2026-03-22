@@ -1,14 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
-use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
-use Bag\Attributes\Transforms;
-use Bag\Values\Optional;
 
 #[StripExtraParameters]
 readonly class PluginUpdateRequestItem extends DTO
@@ -35,6 +33,6 @@ readonly class PluginUpdateRequestItem extends DTO
     {
         // '!^(https?://)?(wordpress.org|w.org)/plugins?/(?P<slug>[^/]+)/?$!i'
         // NOTE: we do not match the slug because we don't know it.  This should be more than good enough.
-        return !$this->UpdateURI || Regex::match('!(?:https?://)?(?:wordpress\.org|w\.org)/plugins?/!', $this->UpdateURI);
+        return ! $this->UpdateURI || Regex::match('!(?:https?://)?(?:wordpress\.org|w\.org)/plugins?/!', $this->UpdateURI);
     }
 }

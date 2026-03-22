@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Seeders;
@@ -17,7 +18,7 @@ class UserSeeder extends Seeder
 
     private function createAdminUser(): void
     {
-        if (!User::where('email', 'admin@aspirecloud.io')->exists()) {
+        if (! User::where('email', 'admin@aspirecloud.io')->exists()) {
             $password = getenv('ADMIN_PASSWORD') ?: uniqid('', true);
 
             $admin = User::create([

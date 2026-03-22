@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -32,10 +33,10 @@ class PackageFairImportCommand extends Command
     {
         ini_set('memory_limit', '-1');
 
-        $filename = (string)$this->argument('file');
+        $filename = (string) $this->argument('file');
         if (in_array($filename, ['-', '/dev/stdin', 'php://stdin'], true)) {
             $filename = 'php://stdin';
-        } elseif (!file_exists($filename)) {
+        } elseif (! file_exists($filename)) {
             $this->fail("$filename: file not found");
         }
 
@@ -47,11 +48,11 @@ class PackageFairImportCommand extends Command
         foreach (File::lazyLines($filename) as $line) {
             $this->currentLine++;
             try {
-                DB::transaction(fn() => $pipeline->send($line)->through($stages)->thenReturn());
+                DB::transaction(fn () => $pipeline->send($line)->through($stages)->thenReturn());
             } catch (Exception $e) {
                 $this->errors++;
                 $this->error("Line $this->currentLine: {$e->getMessage()}");
-                echo 'Partial line: ' . Str::substr($line, 0, 100) . "\n";
+                echo 'Partial line: '.Str::substr($line, 0, 100)."\n";
                 $this->option('stop-on-first-error') and $this->fail('Errors encountered -- aborting.');
             }
         }
@@ -66,7 +67,7 @@ class PackageFairImportCommand extends Command
     private function decodeLine(string $line, Closure $next): void
     {
         $line = trim($line);
-        if (!$line) {
+        if (! $line) {
             return;
         }
         $metadata = json_decode($line, true);

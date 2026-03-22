@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\Packages;
@@ -16,8 +17,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 readonly class PackageSearchResponse extends DTO
 {
     /**
-     * @param array{page: int, per_page: int, total: int, pages: int} $info
-     * @param list<array<string, mixed>> $packages
+     * @param  array{page: int, per_page: int, total: int, pages: int}  $info
+     * @param  list<array<string, mixed>>  $packages
      */
     public function __construct(
         public array $info,
@@ -29,7 +30,7 @@ readonly class PackageSearchResponse extends DTO
      *
      * Each package is converted to its FAIR metadata representation.
      *
-     * @param LengthAwarePaginator<int, Package> $paginator
+     * @param  LengthAwarePaginator<int, Package>  $paginator
      * @return array<string, mixed>
      */
     #[Transforms(LengthAwarePaginator::class)]

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
@@ -11,11 +12,11 @@ use Bag\Values\Optional;
 readonly class PluginUpdateResponseItem extends DTO
 {
     /**
-     * @param Optional|list<string> $requires_plugins
-     * @param Optional|array<string, mixed> $compatibility
-     * @param Optional|array<string, mixed> $icons
-     * @param Optional|array<string, mixed> $banners
-     * @param Optional|array<string, mixed> $banners_rtl
+     * @param  Optional|list<string>  $requires_plugins
+     * @param  Optional|array<string, mixed>  $compatibility
+     * @param  Optional|array<string, mixed>  $icons
+     * @param  Optional|array<string, mixed>  $banners
+     * @param  Optional|array<string, mixed>  $banners_rtl
      */
     public function __construct(
         public string $id,
@@ -23,9 +24,9 @@ readonly class PluginUpdateResponseItem extends DTO
         public string $plugin,
         public string $url,
         public string $package,
-        public string|null $requires,
-        public string|null $tested,
-        public string|null $requires_php,
+        public ?string $requires,
+        public ?string $tested,
+        public ?string $requires_php,
         public Optional|array $requires_plugins,
         public Optional|array $compatibility,
         public Optional|array $icons,
@@ -40,6 +41,7 @@ readonly class PluginUpdateResponseItem extends DTO
     public static function fromPlugin(Plugin $plugin): array
     {
         $slug = $plugin->slug;
+
         return [
             'id' => "w.org/plugins/$slug",
             'slug' => $slug,

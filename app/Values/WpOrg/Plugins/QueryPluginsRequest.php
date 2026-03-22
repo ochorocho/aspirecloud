@@ -14,10 +14,10 @@ use Illuminate\Support\Arr;
 readonly class QueryPluginsRequest extends DTO
 {
     /** @param list<string>|null $tags
-     * @param list<string>|null $tagAnd
-     * @param list<string>|null $tagOr
-     * @param list<string>|null $tagNot
-     * @param string|list<string>|null $fields
+     * @param  list<string>|null  $tagAnd
+     * @param  list<string>|null  $tagOr
+     * @param  list<string>|null  $tagNot
+     * @param  string|list<string>|null  $fields
      */
     public function __construct(
         public ?string $search = null,
@@ -40,16 +40,17 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query->all();
         $query['tags'] = self::mergeQueryTags($query); // @mago-expect analysis:less-specific-argument
+
         return $query;
     }
 
     /**
-     * @param array<string, string|list<string>> $query
+     * @param  array<string, string|list<string>>  $query
      * @return list<string>
      */
     public static function mergeQueryTags(array $query): array
     {
-        $pull = fn(string $key) => array_filter(Arr::wrap(Arr::pull($query, $key, [])) ?? []);
+        $pull = fn (string $key) => array_filter(Arr::wrap(Arr::pull($query, $key, [])) ?? []);
 
         $key = isset($query['tags']) ? 'tags' : 'tag';
         $tags = $pull($key);
@@ -63,7 +64,7 @@ readonly class QueryPluginsRequest extends DTO
         $merged = array_values(array_unique([...$tags, ...$tagAnd, ...$tagOr]));
 
         // Exclude NOT tags if present
-        if (!empty($tagNot)) {
+        if (! empty($tagNot)) {
             $merged = array_values(array_diff($merged, $tagNot));
         }
 

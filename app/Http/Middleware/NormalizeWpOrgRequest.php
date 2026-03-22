@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Middleware;
@@ -15,6 +16,7 @@ class NormalizeWpOrgRequest
             // flatten 'request' query args into the top-level of the query
             $request->merge($rq);
         }
+
         return $next($request);
     }
 }

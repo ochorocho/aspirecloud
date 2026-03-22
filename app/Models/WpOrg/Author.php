@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\WpOrg;
@@ -20,10 +21,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Author extends BaseModel
 {
-    use HasUuids;
-
     /** @use HasFactory<AuthorFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     protected $table = 'authors';
 

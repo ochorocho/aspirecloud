@@ -10,8 +10,8 @@ use Illuminate\Http\JsonResponse;
 trait JsonResponses
 {
     /**
-     * @param array<string, mixed> $data
-     * @param array<string, string> $headers
+     * @param  array<string, mixed>  $data
+     * @param  array<string, string>  $headers
      */
     public function jsonResponse(array $data, int $status = 200, array $headers = []): JsonResponse
     {
@@ -19,26 +19,28 @@ trait JsonResponses
     }
 
     /**
-     * @param string|array<string, mixed> $data
-     * @param array<string, string> $headers
+     * @param  string|array<string, mixed>  $data
+     * @param  array<string, string>  $headers
      */
     public function success(string|array $data = 'success', int $status = 200, array $headers = []): JsonResponse
     {
         if (is_string($data)) {
             $data = ['message' => $data];
         }
+
         return $this->jsonResponse($data, $status, $headers);
     }
 
     /**
-     * @param array<string, mixed> $data
-     * @param array<string, string> $headers
+     * @param  array<string, mixed>  $data
+     * @param  array<string, string>  $headers
      */
     public function error(string|array $data, int $status = 400, array $headers = []): JsonResponse
     {
         if (is_string($data)) {
             $data = ['error' => $data];
         }
+
         return $this->jsonResponse($data, $status, $headers);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Models\WpOrg\ClosedPlugin;
@@ -12,12 +13,12 @@ beforeEach(function () {
 
 function plugin_information_uri(string $slug, array $params = []): string
 {
-    return "/plugins/info/1.2?" . http_build_query(['action' => 'plugin_information', 'slug' => $slug, ...$params]);
+    return '/plugins/info/1.2?'.http_build_query(['action' => 'plugin_information', 'slug' => $slug, ...$params]);
 }
 
 function query_plugin_uri(array $params = []): string
 {
-    return "/plugins/info/1.2?" . http_build_query(['action' => 'query_plugins', ...$params]);
+    return '/plugins/info/1.2?'.http_build_query(['action' => 'query_plugins', ...$params]);
 }
 
 it('returns 422 when slug is missing', function () {
@@ -184,7 +185,7 @@ it('returns plugin contributors in wp.org format', function () {
 it('returns closed plugin information in wp.org format', function () {
     $date = Carbon::parse('2021-02-03');
     ClosedPlugin::factory()->create([
-        'name' => "Display Name If No Gravatar",
+        'name' => 'Display Name If No Gravatar',
         'slug' => '0gravatar',
         'closed_date' => $date,
         'description' => 'test closed plugin',
@@ -264,10 +265,9 @@ it('returns search results by query string in wp.org format', function () {
             'results',
         ])
         ->and($responseData['info']['page'])->toBe(1)
-        ->and($responseData['info']['pages'])->toBe(1)
-        // FIXME: is currently 2 because of the union queries.
-        // ->and($responseData['info']['results'])->toBe(1)
-    ;
+        ->and($responseData['info']['pages'])->toBe(1);
+    // FIXME: is currently 2 because of the union queries.
+    // ->and($responseData['info']['results'])->toBe(1)
 });
 
 it('prioritizes normalized search string', function () {
@@ -277,8 +277,8 @@ it('prioritizes normalized search string', function () {
     ];
 
     $icf = [
-        'name' => "Insecure Customized Fields",
-        'slug' => "insecure-customized-fields",
+        'name' => 'Insecure Customized Fields',
+        'slug' => 'insecure-customized-fields',
     ];
 
     Plugin::factory()->create($scf);

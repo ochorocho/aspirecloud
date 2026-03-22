@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\SecretKey;
@@ -49,6 +50,7 @@ class SecretKeyController extends Controller
             $param = "'$name',";
             $out .= sprintf("define(%-18s '%s');\n", $param, self::uniqueKey());
         }
+
         return $out;
     }
 
@@ -72,7 +74,7 @@ class SecretKeyController extends Controller
     private static function uniqueKey(int $length = 64): string
     {
         return implode(array_map(
-            static fn() => self::VALID_KEY_CHARACTERS[random_int(0, $length)],
+            static fn () => self::VALID_KEY_CHARACTERS[random_int(0, $length)],
             array_fill(0, $length, null),
         ));
     }

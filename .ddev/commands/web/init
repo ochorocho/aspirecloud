@@ -10,7 +10,8 @@ echo "==> Installing PHP dependencies..."
 composer install
 
 echo "==> Installing JavaScript dependencies..."
-npm install
+rm -rf node_modules
+npm ci
 
 echo "==> Building frontend assets..."
 npm run build

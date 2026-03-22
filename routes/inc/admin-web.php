@@ -11,7 +11,7 @@ Route::prefix('admin')
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
-        'permission:' . Permission::UseAdminSite->value,
+        'permission:'.Permission::UseAdminSite->value,
     ])
     ->group(function (Router $router) {
         // ...

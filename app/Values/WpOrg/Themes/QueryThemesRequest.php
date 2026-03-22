@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Values\WpOrg\Themes;
@@ -17,9 +18,9 @@ readonly class QueryThemesRequest extends DTO
     public const ACTION = 'query_themes';
 
     /**
-     * @param list<string>|null $tags
-     * @param list<string>|null $ac_tags
-     * @param string|array<string,bool>|null $fields
+     * @param  list<string>|null  $tags
+     * @param  list<string>|null  $ac_tags
+     * @param  string|array<string,bool>|null  $fields
      */
     public function __construct(
         public ?string $search = null, // text to search
@@ -51,6 +52,7 @@ readonly class QueryThemesRequest extends DTO
         ];
 
         $query['fields'] = self::getFields($request, $defaultFields);
+
         return $query;
     }
 }

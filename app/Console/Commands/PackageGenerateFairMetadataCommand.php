@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -22,8 +23,9 @@ class PackageGenerateFairMetadataCommand extends Command
         $package = Package::query()
             ->where('did', $did)
             ->first();
-        if (!$package) {
+        if (! $package) {
             $this->error('Package not found');
+
             return;
         }
 

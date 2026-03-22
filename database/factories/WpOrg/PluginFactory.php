@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories\WpOrg;
@@ -28,7 +29,7 @@ class PluginFactory extends Factory
             'author' => $this->faker->name(),
             'requires' => $this->faker->semver(),
             'requires_php' => $this->faker->randomElement(['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']),
-            'tested' => 'WordPress ' . $this->faker->semver(),
+            'tested' => 'WordPress '.$this->faker->semver(),
             'download_link' => $this->faker->url(),
             'added' => $this->faker->dateTimeBetween('-2 years'),
             'last_updated' => $this->faker->dateTimeBetween('-6 months'),
@@ -109,6 +110,7 @@ class PluginFactory extends Factory
                 ];
             }
         }
+
         return $plugins;
     }
 
@@ -154,12 +156,12 @@ class PluginFactory extends Factory
 
     protected function generateReviews(): string
     {
-        $faq = "";
+        $faq = '';
         $count = $this->faker->numberBetween(3, 6);
 
         for ($i = 0; $i < $count; $i++) {
-            $faq .= "### " . $this->faker->sentence() . "\n\n";
-            $faq .= $this->faker->paragraph() . "\n\n";
+            $faq .= '### '.$this->faker->sentence()."\n\n";
+            $faq .= $this->faker->paragraph()."\n\n";
         }
 
         return $faq;
@@ -167,17 +169,17 @@ class PluginFactory extends Factory
 
     protected function generateChangelog(): string
     {
-        $changelog = "";
+        $changelog = '';
         $count = $this->faker->numberBetween(3, 6);
 
         for ($i = $count; $i > 0; $i--) {
             $version = $this->faker->semver();
             $changelog .= "### {$version}\n";
-            $changelog .= "Released: " . $this->faker->date() . "\n\n";
+            $changelog .= 'Released: '.$this->faker->date()."\n\n";
 
             $changes = $this->faker->numberBetween(2, 5);
             for ($j = 0; $j < $changes; $j++) {
-                $changelog .= "* " . $this->faker->sentence() . "\n";
+                $changelog .= '* '.$this->faker->sentence()."\n";
             }
             $changelog .= "\n";
         }
@@ -215,7 +217,7 @@ class PluginFactory extends Factory
      */
     public function free(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'business_model' => 'free',
             'commercial_support_url' => null,
             'donate_link' => $this->faker->url(),
@@ -227,7 +229,7 @@ class PluginFactory extends Factory
      */
     public function premium(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'business_model' => 'premium',
             'commercial_support_url' => $this->faker->url(),
             'donate_link' => null,
@@ -239,7 +241,7 @@ class PluginFactory extends Factory
      */
     public function highlyRated(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'rating' => $this->faker->numberBetween(4, 5),
             'num_ratings' => $this->faker->numberBetween(500, 1000),
             'active_installs' => $this->faker->numberBetween(100000, 1000000),

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Downloads;
@@ -20,8 +21,7 @@ class DownloadService implements Downloader
         string $slug,
         string $file,
         ?string $revision = null,
-    ): Response
-    {
+    ): Response {
         if ($revision === 'head') {
             // head is there to have something in the url, but it behaves the same as not passing it
             $revision = null;
@@ -40,12 +40,13 @@ class DownloadService implements Downloader
                 'revision' => $revision,
                 'upstream_url' => $upstream_url,
             ];
-            Log::warning("Could not instantiate S3 storage -- redirecting to original URL", $context);
+            Log::warning('Could not instantiate S3 storage -- redirecting to original URL', $context);
+
             return redirect()->to($upstream_url);
         }
 
         $context = ['type' => $type->value, 'slug' => $slug, 'file' => $file, 'revision' => $revision];
-        Log::debug("DOWNLOAD", $context);
+        Log::debug('DOWNLOAD', $context);
 
         $path = $type->buildLocalPath($slug, $file, $revision);
 
@@ -76,7 +77,7 @@ class DownloadService implements Downloader
             'Connection' => 'keep-alive',
         ])->get($upstream_url);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             $context['status'] = $response->getStatusCode();
             $context['message'] = $response->getReasonPhrase();
             Log::error("Failed to download asset for $slug:$revision", $context);
@@ -89,6 +90,7 @@ class DownloadService implements Downloader
     private function redirectToS3(string $path): RedirectResponse
     {
         $s3 = Storage::disk('s3');
+
         return redirect($s3->temporaryUrl($path, now()->addSeconds(60)));
     }
 
@@ -100,6 +102,7 @@ class DownloadService implements Downloader
         unset($headers['host']);
         $response = Http::withHeaders($headers)->get($url);
         $content = $response->body();
+
         return response($content, $response->status(), $response->headers());
     }
 }

@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 function createMockResponse(array $data): object
 {
-    return new class($data) {
+    return new class($data)
+    {
         public function __construct(private array $data) {}
 
         public function asArray(): array
@@ -15,7 +17,8 @@ function createMockResponse(array $data): object
 
 function createMockClient(array $responseData, ?callable $validator = null): object
 {
-    return new class($responseData, $validator) {
+    return new class($responseData, $validator)
+    {
         private $validator;
 
         public function __construct(
@@ -31,7 +34,8 @@ function createMockClient(array $responseData, ?callable $validator = null): obj
                 call_user_func($this->validator, $params);
             }
 
-            return new class($this->responseData) {
+            return new class($this->responseData)
+            {
                 public function __construct(private array $data) {}
 
                 public function asArray(): array

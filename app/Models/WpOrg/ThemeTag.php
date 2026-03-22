@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\WpOrg;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 final class ThemeTag extends BaseModel
 {
-    //region Model Definition
+    // region Model Definition
 
     use HasUuids;
 
@@ -31,9 +32,9 @@ final class ThemeTag extends BaseModel
         ];
     }
 
-    //endregion
+    // endregion
 
-    //region Relationships
+    // region Relationships
 
     /** @return BelongsToMany<Theme, $this> */
     public function themes(): BelongsToMany
@@ -41,5 +42,5 @@ final class ThemeTag extends BaseModel
         return $this->belongsToMany(Theme::class, 'theme_theme_tags', 'theme_tag_id', 'theme_id');
     }
 
-    //endregion
+    // endregion
 }

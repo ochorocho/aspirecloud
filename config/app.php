@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 return [
@@ -26,11 +27,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    //// AspirePress Configuration
+    // // AspirePress Configuration
 
     'aspirecloud' => [
         'download' => [
-            'base' => env('DOWNLOAD_BASE', env('APP_URL') . '/download/'), # must have a trailing slash!
+            'base' => env('DOWNLOAD_BASE', env('APP_URL').'/download/'), // must have a trailing slash!
             'cache_seconds' => env('DOWNLOAD_CACHE_SECONDS', 60 * 60 * 24 * 10),
         ],
     ],

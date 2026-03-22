@@ -1,6 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
+use App\Enums\PackageType;
 use App\Http\Controllers\API\Elastic\ElasticSearchController;
 use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\FAIR\Packages\PackageSearchController;
@@ -37,21 +39,21 @@ Route::prefix('/')
             ->get('/metrics', MetricsController::class)
             ->name('api.metrics');
 
-        //// FAIR metadata
+        // // FAIR metadata
         $router->get('/packages/{type}', PackageSearchController::class)
-            ->where('type', implode('|', \App\Enums\PackageType::values()))
+            ->where('type', implode('|', PackageType::values()))
             ->name('package.search');
 
         $router->get('/packages/{did}', [PackageInformationController::class, 'fairMetadata'])
             ->name('package.fairMetadata');
 
         $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
-            ->where('type', implode('|', \App\Enums\PackageType::values()))
+            ->where('type', implode('|', PackageType::values()))
             ->name('package.didDocument');
 
         Route::get('/plugins/search', [ElasticSearchController::class, 'searchPlugins']);
 
-        //// Legacy API: https://codex.wordpress.org/WordPress.org_API
+        // // Legacy API: https://codex.wordpress.org/WordPress.org_API
         $router
             ->any('/core/browse-happy/{version}', BrowseHappyController::class)
             ->where(['version' => '1.1'])
@@ -102,7 +104,7 @@ Route::prefix('/')
             ->where(['version' => '1.[01]'])
             ->name('api.wp.themes.update-check');
 
-        /// Pass-through routes still going to .org
+        // / Pass-through routes still going to .org
 
         $router
             ->any('/core/checksums/{version}', PassThroughController::class)
@@ -184,5 +186,5 @@ Route::prefix('/')
 
 // Route::any('{path}', CatchAllController::class)->where('path', '.*');
 
-require __DIR__ . '/inc/admin-api.php';
-require __DIR__ . '/inc/download.php';
+require __DIR__.'/inc/admin-api.php';
+require __DIR__.'/inc/download.php';

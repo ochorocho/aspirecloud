@@ -15,19 +15,19 @@ use Illuminate\Support\Arr;
 readonly class ThemeResponse extends DTO
 {
     /**
-     * @param Optional|array{'1': int, '2': int, '3': int, '4': int, '5': int, } $ratings
-     * @param Optional|array<string, mixed> $sections
-     * @param Optional|array<string, mixed> $tags
-     * @param Optional|array<string, mixed> $versions
-     * @param Optional|array<string, mixed> $screenshots
-     * @param Optional|array<string, mixed> $photon_screenshots
-     * @param Optional|array<string, mixed> $trac_tickets
+     * @param  Optional|array{'1': int, '2': int, '3': int, '4': int, '5': int, }  $ratings
+     * @param  Optional|array<string, mixed>  $sections
+     * @param  Optional|array<string, mixed>  $tags
+     * @param  Optional|array<string, mixed>  $versions
+     * @param  Optional|array<string, mixed>  $screenshots
+     * @param  Optional|array<string, mixed>  $photon_screenshots
+     * @param  Optional|array<string, mixed>  $trac_tickets
      */
     public function __construct(
         public string $name,
         public string $slug,
         public string $version,
-        public string|null $preview_url,
+        public ?string $preview_url,
         public Optional|Author|string $author,
         public Optional|string $description,
         public Optional|string|null $screenshot_url,
@@ -124,17 +124,17 @@ readonly class ThemeResponse extends DTO
     /** @param array<string, bool> $fields */
     public function withFields(array $fields): static
     {
-        $none = new Optional();
+        $none = new Optional;
         $extendedAuthor = Arr::pull($fields, 'extended_author', false);
 
         $omit = collect($fields)
-            ->filter(fn($val, $key) => !$val)
-            ->mapWithKeys(fn(bool $val, string $key) => [$key => $none])
+            ->filter(fn ($val, $key) => ! $val)
+            ->mapWithKeys(fn (bool $val, string $key) => [$key => $none])
             ->toArray();
 
         $self = $this->with($omit);
 
-        if (!$extendedAuthor && $this->author instanceof Author) {
+        if (! $extendedAuthor && $this->author instanceof Author) {
             $self = $self->with(['author' => $this->author->user_nicename]);
         }
 

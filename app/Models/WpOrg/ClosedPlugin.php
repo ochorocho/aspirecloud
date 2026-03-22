@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\WpOrg;
@@ -25,10 +26,10 @@ use InvalidArgumentException;
  */
 class ClosedPlugin extends BaseModel
 {
-    use HasUuids;
-
     /** @use HasFactory<ClosedPluginFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     protected $table = 'closed_plugins';
 
@@ -68,7 +69,7 @@ class ClosedPlugin extends BaseModel
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'closed' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
-        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
+        $trunc = fn (?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
         return self::create([
             'slug' => $metadata['slug'],

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Utils\Config;
@@ -10,5 +11,5 @@ return [
     ],
     'domains' => [
         'webdid' => env('FAIR_WEBDID_DOMAIN', null),
-    ]
+    ],
 ];

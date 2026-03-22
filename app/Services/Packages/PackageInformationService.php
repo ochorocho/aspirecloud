@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Packages;
@@ -7,21 +8,12 @@ use App\Models\Package;
 
 class PackageInformationService
 {
-    /**
-     * @param string $did
-     * @return Package|null
-     */
-    public function findByDID(string $did): Package|null
+    public function findByDID(string $did): ?Package
     {
         return Package::query()->where('did', $did)->first();
     }
 
-    /**
-     * @param string $type
-     * @param string $slug
-     * @return Package|null
-     */
-    public function find(string $type, string $slug): Package|null
+    public function find(string $type, string $slug): ?Package
     {
         return Package::query()
             ->where('type', $type)
@@ -29,16 +21,12 @@ class PackageInformationService
             ->first();
     }
 
-    /**
-     * @param string $did
-     * @return string
-     */
     public function getPackageMetadataUrl(string $did): string
     {
         return route('package.fairMetadata', ['did' => $did], true);
     }
 
-    public function findBySlug(string $slug): Package|null
+    public function findBySlug(string $slug): ?Package
     {
         return Package::query()->where('slug', $slug)->first();
     }

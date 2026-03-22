@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -19,7 +20,7 @@ abstract class BaseModel extends Model
     /**
      * Exists solely because Laravel IDEA can't seem to find create() without this
      *
-     * @param array<string, mixed> $attributes
+     * @param  array<string, mixed>  $attributes
      */
     public static function create(array $attributes = []): static
     {

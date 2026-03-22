@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\API\Metrics;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 class MetricsController extends Controller
 {
     private const string REQUESTS_COUNT = 'metrics_request_count';
+
     private const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
 
     public function __construct(
@@ -25,7 +27,7 @@ class MetricsController extends Controller
         // total request count
         $lines[] = '# HELP requests_total Total number of requests';
         $lines[] = '# TYPE requests_total counter';
-        $lines[] = 'requests_total ' . $this->metricsService->get(self::REQUESTS_COUNT);
+        $lines[] = 'requests_total '.$this->metricsService->get(self::REQUESTS_COUNT);
         // requests by route
         $lines[] = '# HELP requests_by_route_total Requests by route';
         $lines[] = '# TYPE requests_by_route_total counter';
@@ -46,7 +48,7 @@ class MetricsController extends Controller
             }
             $alreadySeen[] = $sanitized;
 
-            $key = self::REQUEST_COUNT_ROUTE . $sanitized;
+            $key = self::REQUEST_COUNT_ROUTE.$sanitized;
             $count = $this->metricsService->get($key);
             $escaped = addslashes($name);
 
@@ -58,7 +60,7 @@ class MetricsController extends Controller
         // model counts
         $lines[] = '# HELP model_count Total rows per model';
         $lines[] = '# TYPE model_count gauge';
-        $lines[] = 'model_count{model="plugins"} ' . DB::table('plugins')->count();
+        $lines[] = 'model_count{model="plugins"} '.DB::table('plugins')->count();
 
         return response(
             implode("\n", $lines),
@@ -69,10 +71,6 @@ class MetricsController extends Controller
         );
     }
 
-    /**
-     * @param string $value
-     * @return string
-     */
     private static function sanitize(string $value): string
     {
         return Regex::replace('/[\/\.\-\{\}\:]/', '_', $value);

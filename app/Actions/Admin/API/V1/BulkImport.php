@@ -21,8 +21,8 @@ use function Safe\ini_set;
 
 class BulkImport
 {
-    use JsonResponses;
     use JsonLines;
+    use JsonResponses;
 
     public function __invoke(Request $request, Pipeline $pipeline): JsonResponse
     {
@@ -35,12 +35,12 @@ class BulkImport
 
         $request_info = ['userid' => auth()->user()?->id, 'ip' => $request->ip()];
 
-        Log::info("Beginning bulk import", $request_info);
+        Log::info('Beginning bulk import', $request_info);
 
         foreach ($this->lazyJsonLines($request) as $metadata) {
             $currentLine++;
             try {
-                $model = DB::transaction(fn() => $this->loadOne($metadata));
+                $model = DB::transaction(fn () => $this->loadOne($metadata));
                 assert($model instanceof Model); // strip 'mixed' type from DB::transaction
                 Log::debug(
                     "Imported {$model->slug}",
@@ -52,7 +52,7 @@ class BulkImport
             }
         }
 
-        Log::info("Bulk import complete", [...$request_info, 'imported' => $imported, 'errors' => $errors]);
+        Log::info('Bulk import complete', [...$request_info, 'imported' => $imported, 'errors' => $errors]);
 
         return $errors ? $this->error(compact('errors', 'imported')) : $this->success(['imported' => $imported]);
     }

@@ -20,8 +20,8 @@ use function Safe\ini_set;
 
 class BulkPackageImport
 {
-    use JsonResponses;
     use JsonLines;
+    use JsonResponses;
 
     public function __invoke(Request $request, Pipeline $pipeline): JsonResponse
     {
@@ -39,7 +39,7 @@ class BulkPackageImport
         foreach ($this->lazyJsonLines($request) as $metadata) {
             $currentLine++;
             try {
-                $package = DB::transaction(fn() => $this->loadOne($metadata));
+                $package = DB::transaction(fn () => $this->loadOne($metadata));
                 Log::debug(
                     "Imported {$package->did}",
                     ['slug' => $package->slug, 'type' => $package->type],
@@ -64,6 +64,7 @@ class BulkPackageImport
         $package?->delete();
 
         $fairMetadata = FairMetadata::from($metadata);
+
         return Package::fromPackageData(PackageData::from($fairMetadata));
     }
 }

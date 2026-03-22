@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Feature\API\WpOrg;
@@ -21,13 +22,13 @@ function validateKeys(string $content, array $expectedKeyNames, string $validKey
         $keyValue = $matches[1];
 
         // Validate that the key contains only valid characters
-        expect(preg_match('/^[' . preg_quote($validKeys, '/') . ']{64}$/', $keyValue))
+        expect(preg_match('/^['.preg_quote($validKeys, '/').']{64}$/', $keyValue))
             ->toBe(1)
             ->and(preg_match(
-                '/^define\(\'' . preg_quote(
+                '/^define\(\''.preg_quote(
                     $keyName,
                     '/',
-                ) . '\',\s+\'[^\']+\'\);$/',
+                ).'\',\s+\'[^\']+\'\);$/',
                 $matches[0],
             ))->toBe(1);
     }
