@@ -71,7 +71,6 @@ final class Plugin extends BaseModel
     // region Definition
 
     use HasUuids;
-
     use Indexable;
 
     protected $table = 'plugins';
