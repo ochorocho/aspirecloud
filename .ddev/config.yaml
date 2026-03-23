@@ -17,6 +17,8 @@ web_environment:
   - REDIS_HOST=redis
   - REDIS_PORT=6379
   - REDIS_CLIENT=predis
+  # Pin mago version; remove to use latest
+  # - MAGO_VERSION=1.0.0-beta.34
 
 web_extra_daemons:
   - name: queue-worker

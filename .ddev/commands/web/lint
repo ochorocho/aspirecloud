@@ -1,13 +1,19 @@
 #!/bin/bash
 
-## Description: Run code style checks and static analysis
+## Description: Run all code quality checks (mago, Pint, PHPStan)
 ## Usage: lint
 ## Example: "ddev lint"
 
 set -e
 
-echo "==> Running code style checks..."
+echo "==> Running mago lint..."
+mago lint
+
+echo "==> Checking mago formatting..."
+mago format --check
+
+echo "==> Running code style checks (Pint)..."
 vendor/bin/pint --test
 
-echo "==> Running static analysis..."
+echo "==> Running static analysis (PHPStan)..."
 vendor/bin/phpstan --memory-limit=1G analyse

@@ -26,10 +26,16 @@ jobs:
       - name: Install dependencies
         run: ddev composer install
 
-      - name: Check code style
+      - name: Run mago lint
+        run: ddev mago lint
+
+      - name: Check mago formatting
+        run: ddev mago format --check
+
+      - name: Check code style (Pint)
         run: ddev style
 
-      - name: Run static analysis
+      - name: Run static analysis (PHPStan)
         run: ddev quality
 
   test:

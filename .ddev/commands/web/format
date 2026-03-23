@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Format code with mago
+## Usage: format
+## Example: "ddev format"
+
+set -e
+
+mago format

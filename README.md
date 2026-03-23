@@ -46,9 +46,12 @@ ddev test --filter="test name"    # Run a specific test
 ### Code Quality
 
 ```bash
-ddev lint           # Run style checks + static analysis
+ddev lint           # Run all checks: mago + Pint + PHPStan
+ddev mago lint      # Run mago linter only
+ddev mago format    # Format code with mago
+ddev format         # Same as above
 ddev style          # Run code style checks only (Pint)
-ddev fix-style      # Auto-fix code style issues
+ddev fix-style      # Auto-fix code style issues (Pint)
 ddev quality        # Run static analysis only (PHPStan)
 ddev check          # Run everything: lint + all tests
 ```
@@ -90,7 +93,12 @@ The Vite dev server is available at `https://vite.aspirecloud.ddev.site` when ru
 
 | Command | Description |
 |---------|-------------|
-| `ddev lint` | Run style checks + static analysis |
+| `ddev lint` | Run all checks: mago lint + format + Pint + PHPStan |
+| `ddev mago lint` | Run mago linter |
+| `ddev mago format` | Format code with mago |
+| `ddev mago format --check` | Check mago formatting without changes |
+| `ddev mago analyze` | Run mago static analysis |
+| `ddev format` | Format code (mago) |
 | `ddev style` | Check code style (Pint) |
 | `ddev fix-style` | Auto-fix code style (Pint) |
 | `ddev quality` | Run PHPStan static analysis |

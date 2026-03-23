@@ -1,0 +1,12 @@
+name: mago
+repository: amateescu/ddev-mago
+version: 1.1.1
+install_date: "2026-03-23T01:04:01+01:00"
+project_files:
+    - commands/web/mago
+    - web-build/Dockerfile.mago
+    - config.mago.yaml
+global_files: []
+removal_actions:
+    - rm web-build/Dockerfile.mago
+    - rm config.mago.yaml

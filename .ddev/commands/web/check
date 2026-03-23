@@ -1,15 +1,21 @@
 #!/bin/bash
 
-## Description: Run all quality checks: lint + tests
+## Description: Run all quality checks: mago, lint, and tests
 ## Usage: check
 ## Example: "ddev check"
 
 set -e
 
-echo "==> Running code style checks..."
+echo "==> Running mago lint..."
+mago lint
+
+echo "==> Checking mago formatting..."
+mago format --check
+
+echo "==> Running code style checks (Pint)..."
 vendor/bin/pint --test
 
-echo "==> Running static analysis..."
+echo "==> Running static analysis (PHPStan)..."
 vendor/bin/phpstan --memory-limit=1G analyse
 
 echo "==> Resetting testing database..."
